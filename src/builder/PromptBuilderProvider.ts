@@ -162,7 +162,10 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
               
               <div class="test-input">
                 <textarea id="test-input" placeholder="Enter test input..."></textarea>
-                <button id="run-test">🚀 Test Now</button>
+                <div class="test-buttons">
+                  <button id="run-test">🚀 Test Now</button>
+                  <button id="clear-test" class="secondary-btn">🧹 Clear</button>
+                </div>
               </div>
 
               <div id="test-results"></div>
@@ -219,6 +222,15 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
           }
         }]
       };
+      
+      // Also update the main prompt data to persist the test case
+      if (!promptData.test_cases || promptData.test_cases.length === 0) {
+        promptData.test_cases = [{ name: 'Default Test Case', inputs: { user_query: '' } }];
+      }
+
+      // Assuming the first test case is the one used in the builder
+      const firstInputKey = Object.keys(promptData.test_cases[0]!.inputs)[0] || 'user_query';
+      promptData.test_cases[0]!.inputs[firstInputKey] = testInput;
 
       // Import required classes
       const { PromptCompiler } = await import('../compiler/PromptCompiler');

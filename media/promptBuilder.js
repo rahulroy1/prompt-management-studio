@@ -29,6 +29,7 @@
         addModelBtn: document.getElementById('add-model-btn'),
         testInput: document.getElementById('test-input'),
         runTestBtn: document.getElementById('run-test'),
+        clearTestBtn: document.getElementById('clear-test'),
         testResults: document.getElementById('test-results'),
         saveBtn: document.getElementById('save-prompt'),
         exportJsonBtn: document.getElementById('export-json'),
@@ -51,6 +52,7 @@
         elements.addExampleBtn?.addEventListener('click', addExample);
         elements.addModelBtn?.addEventListener('click', () => addModelRow());
         elements.runTestBtn?.addEventListener('click', runTest);
+        elements.clearTestBtn?.addEventListener('click', clearTestArea);
         elements.saveBtn?.addEventListener('click', () => savePrompt(false));
         elements.exportJsonBtn?.addEventListener('click', () => exportPrompt('json'));
         elements.exportPackageBtn?.addEventListener('click', () => exportPrompt('package'));
@@ -111,12 +113,14 @@
         // Load model selection
         loadModels(prompt.models || []);
         
-        // Load test input from first test case
-        if (prompt.test_cases && prompt.test_cases.length > 0) {
-            const firstTestCase = prompt.test_cases[0];
-            const firstInput = Object.values(firstTestCase.inputs || {})[0];
-            if (elements.testInput && firstInput) {
-                elements.testInput.value = firstInput;
+        // Load test input from first test case, but only if the box is currently empty
+        if (elements.testInput && elements.testInput.value === '') {
+            if (prompt.test_cases && prompt.test_cases.length > 0) {
+                const firstTestCase = prompt.test_cases[0];
+                const firstInput = Object.values(firstTestCase.inputs || {})[0];
+                if (firstInput) {
+                    elements.testInput.value = firstInput;
+                }
             }
         }
         
@@ -555,6 +559,16 @@
       } else {
         modelSelect.value = models[0] || '';
       }
+    }
+    
+    // Clear the test input and results
+    function clearTestArea() {
+        if (elements.testInput) {
+            elements.testInput.value = '';
+        }
+        if (elements.testResults) {
+            elements.testResults.innerHTML = '';
+        }
     }
     
     // Initialize the app

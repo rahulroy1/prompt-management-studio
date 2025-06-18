@@ -155,8 +155,22 @@ button:active {
   min-height: 60px;
 }
 
-#run-test {
-  width: 100%;
+.test-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+#run-test, #clear-test {
+  flex-grow: 1;
+}
+
+.secondary-btn {
+    background-color: var(--vscode-button-secondaryBackground);
+    color: var(--vscode-button-secondaryForeground);
+}
+
+.secondary-btn:hover {
+    background-color: var(--vscode-button-secondaryHoverBackground);
 }
 
 .add-btn {
