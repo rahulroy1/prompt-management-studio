@@ -1,3 +1,40 @@
+# Why We Built This
+
+Prompt engineering is a new and critical part of software development, but the tooling has not kept up. We built this extension to solve the real-world problems we faced every day when working with Large Language Models.
+
+## The Problem: Prompt Chaos
+
+If you've built an application with an LLM, this probably looks familiar:
+
+-   **Where do prompts live?** Are they in `.txt` files? In comments next to the code? In a Notion doc?
+-   **How do you test them?** Do you have a Python script you run? Or do you just copy-paste them into a web UI?
+-   **Which model is best?** GPT-4 is great, but is it better than Claude 3 for this specific task? How do you know for sure?
+-   **How do you collaborate?** How does a new team member find the "official" prompt for a specific feature?
+
+This chaos leads to wasted time, inconsistent results, and a frustrating developer experience.
+
+## The Solution: A Professional Workflow in VS Code
+
+We believe the solution is to treat prompts as first-class citizens of your codebase, and to build tooling that supports a professional engineering workflow.
+
+### 1. Stop Guessing, Start Evaluating
+The most immediate problem this extension solves is **comparative evaluation**. Instead of testing one model at a time, you can run a single prompt against multiple models and see a side-by-side comparison of the results. This allows you to make data-driven decisions about which model, and which version of a prompt, is best for your needs.
+
+### 2. From Loose Text to Structured Assets
+A prompt is more than just a string of text. It has a purpose, a desired format, and examples of what to do (and what not to do). This extension provides a structured `.prompt.json` format and a custom IDE that guides you to define these critical components:
+
+-   **Persona:** Who is the AI?
+-   **Instructions:** What should it do?
+-   **Examples:** Show, don't just tell.
+-   **Output Schema:** Force the output into a reliable structure, like JSON.
+
+This turns your prompts from fragile strings into robust, predictable, and maintainable assets.
+
+### 3. Keep Prompts with Your Code
+Prompts are a dependency of your application. They should live in the same repository as the code that calls them. By using a `.prompt.json` file format, you can now manage your prompts using the best tool for the job: **Git**. You get version history, branching, and pull requests for your prompts, just like the rest of your code.
+
+This project exists to bring the established best practices of software engineering to the new frontier of prompt engineering.
+
 # Why We Do This: The Prompt Engineering Crisis
 
 ## 🔥 The Problem We're Solving

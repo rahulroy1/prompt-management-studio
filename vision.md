@@ -1,10 +1,27 @@
-# Vision: Prompt Management Studio
+# Vision: A Professional IDE for Prompt Engineering
 
-## 🎯 Our Vision
+**Our vision is to evolve prompt engineering from a conversational art into a structured, scalable engineering discipline, right inside the developer's native workflow.**
 
-**Transform prompt engineering from scattered chaos into collaborative, standardized infrastructure that scales with AI adoption.**
+We believe the future of building with AI requires treating prompts with the same rigor as code. They need to be versioned, tested, standardized, and collaboratively developed. This project provides the open-source tooling to make that vision a reality.
 
-We envision a world where prompt engineering follows the same collaborative principles that revolutionized software development through Git and open source. Just as developers no longer write code in isolation, prompt engineers shouldn't work in silos with fragmented, undiscoverable prompts.
+## The Core Philosophy: Developer-Native, Evaluation-Led
+
+1.  **Developer-Native**: The most effective place to build and manage prompts is where developers already work: their code editor. Our primary focus is a best-in-class **VS Code extension** that integrates seamlessly with Git, existing files, and the developer's natural workflow. We meet developers where they are.
+2.  **Evaluation-Led**: The "killer feature" that provides immediate value is the ability to test a single prompt against multiple models simultaneously. The side-by-side comparison view is the core of the experience, enabling developers to quickly determine the best model and settings for their specific use case.
+
+## What Success Looks Like
+
+### For the Individual Developer
+- **Confidence:** No more guessing. Developers can see empirical evidence of which model performs best for their prompt.
+- **Productivity:** A structured IDE and templates eliminate the need to start from scratch, drastically speeding up the creation of high-quality prompts.
+- **Organization:** Prompts are no longer loose text files or comments in code; they are structured `.prompt.json` assets that can be managed and versioned like any other part of the application.
+
+### For the Community
+- **Shared Standards:** The `.prompt.json` schema becomes a simple, open standard for sharing and reusing prompts across projects and teams.
+- **Collaborative Improvement:** By making prompts discoverable and easy to version with Git, the community can collectively build and refine a library of "Golden" templates for common tasks.
+- **Lowering the Barrier:** Newcomers can learn best practices by exploring well-structured, expert-crafted prompts provided with the extension.
+
+Our ultimate goal is to provide the essential, open-source infrastructure for professional prompt engineering, making it a reliable and integrated part of the software development lifecycle.
 
 ## 🌟 The Future State
 
