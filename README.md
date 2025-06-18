@@ -298,10 +298,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## 🆘 Support
 
-- 📖 **Documentation**: [docs.promptstudio.dev](https://docs.promptstudio.dev)
 - 🐛 **Issues**: [GitHub Issues](https://github.com/prompt-studio/vscode-extension/issues)
-- 💬 **Community**: [Discord](https://discord.gg/promptstudio)
-- 📧 **Email**: support@promptstudio.dev
 
 ## 🌟 Why Prompt Studio?
 
