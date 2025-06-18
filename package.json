@@ -1,0 +1,202 @@
+{
+  "name": "prompt-management-studio",
+  "displayName": "Prompt Management Studio",
+  "description": "A developer-native IDE for prompt engineering, evaluation, and governance.",
+  "version": "0.0.1",
+  "publisher": "rahulroy-dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rahulroy1/prompt-management-studio.git"
+  },
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning",
+    "Testing"
+  ],
+  "keywords": [
+    "ai",
+    "prompt",
+    "gpt",
+    "claude",
+    "prompt engineering",
+    "multi-model",
+    "evaluation"
+  ],
+  "activationEvents": [
+    "onCommand:promptStudio.evaluatePrompt",
+    "onCommand:promptStudio.openPromptIDE",
+    "onCommand:promptStudio.createPrompt",
+    "onCommand:promptStudio.configureApiKeys",
+    "onCommand:promptStudio.openTemplateLibrary",
+    "onCommand:promptStudio.comparePromptVersions"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "prompt-json",
+        "aliases": ["Prompt JSON", "prompt-json"],
+        "extensions": [".prompt.json"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "prompt-json",
+        "scopeName": "source.prompt.json",
+        "path": "./syntaxes/prompt-json.tmGrammar.json"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "promptStudio.promptBuilder",
+        "displayName": "Prompt Builder",
+        "selector": [
+          {
+            "filenamePattern": "*.prompt.json"
+          }
+        ],
+        "priority": "default"
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": "*.prompt.json",
+        "url": "./schemas/prompt.schema.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "promptStudio.evaluatePrompt",
+        "title": "Evaluate Prompt",
+        "icon": "$(play)"
+      },
+      {
+        "command": "promptStudio.openPromptIDE",
+        "title": "Open Prompt IDE",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "promptStudio.createPrompt",
+        "title": "Create New Prompt",
+        "icon": "$(add)"
+      },
+      {
+        "command": "promptStudio.configureApiKeys",
+        "title": "Configure API Keys",
+        "icon": "$(key)"
+      },
+      {
+        "command": "promptStudio.openTemplateLibrary",
+        "title": "Browse Template Library",
+        "category": "Prompt Studio"
+      },
+      {
+        "command": "promptStudio.comparePromptVersions",
+        "title": "Compare Prompt Versions",
+        "category": "Prompt Studio"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "promptStudio.evaluatePrompt",
+          "when": "resourceFilename =~ /\\.prompt\\.json$/",
+          "group": "navigation"
+        },
+        {
+          "command": "promptStudio.openPromptIDE",
+          "when": "resourceFilename =~ /\\.prompt\\.json$/",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "promptStudio.createPrompt",
+          "group": "2_workspace",
+          "when": "explorerResourceIsFolder"
+        },
+        {
+          "command": "promptStudio.createPrompt",
+          "group": "2_workspace"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "promptStudio.evaluatePrompt",
+          "when": "resourceFilename =~ /\\.prompt\\.json$/"
+        },
+        {
+          "command": "promptStudio.openPromptIDE",
+          "when": "resourceFilename =~ /\\.prompt\\.json$/"
+        },
+        {
+          "command": "promptStudio.createPrompt"
+        },
+        {
+          "command": "promptStudio.configureApiKeys"
+        },
+        {
+          "command": "promptStudio.openTemplateLibrary",
+          "when": "false"
+        },
+        {
+          "command": "promptStudio.comparePromptVersions",
+          "when": "resourceExtname == .prompt.json"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Prompt Studio",
+      "properties": {
+        "promptStudio.defaultModels": {
+          "type": "array",
+          "default": ["gpt-4-turbo", "claude-3-sonnet"],
+          "description": "Default AI models to evaluate prompts against",
+          "items": {
+            "type": "string"
+          }
+        },
+        "promptStudio.showCostEstimates": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show cost estimates for API calls"
+        },
+        "promptStudio.evaluationTimeout": {
+          "type": "number",
+          "default": 30000,
+          "description": "Timeout for model evaluation in milliseconds"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.84.0",
+    "@types/node": "18.x",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.8",
+    "@types/mocha": "^10.0.3"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "openai": "^4.24.1",
+    "@anthropic-ai/sdk": "^0.9.1"
+  }
+} 

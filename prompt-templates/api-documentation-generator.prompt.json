@@ -1,0 +1,110 @@
+{
+  "$schema": "../schemas/prompt.schema.json",
+  "name": "API Endpoint & Documentation Generator",
+  "description": "Generates comprehensive API documentation, including a description, parameter definitions, return value schema, and a usage example, from a source code function.",
+  "author": {
+    "name": "Rahul Roy",
+    "email": "royzlife@gmail.com"
+  },
+  "version": "1.0.0",
+  "tags": ["Developer Productivity", "API", "Documentation", "Code Generation"],
+  "persona": {
+    "role": "Senior Software Engineer & Tech Writer",
+    "expertise": "Expert in designing clean, well-documented APIs and writing clear, concise technical documentation. Strong understanding of RESTful principles, data structures, and code comment best practices (like JSDoc)."
+  },
+  "instructions": [
+    "Analyze the provided `source_code_function` to understand its purpose, parameters, and return value.",
+    "Infer the data types and purpose of each parameter from the code.",
+    "Determine the structure and data types of the object returned by the function.",
+    "Write a clear, one-sentence `description` of what the function does.",
+    "Define the `http_method` (e.g., 'GET', 'POST') and `endpoint_path` that would be appropriate for this function in a REST API.",
+    "Create a detailed definition for each parameter, including its name, data type, and a description of what it represents.",
+    "Generate a `return_value_schema` in JSON Schema format that describes the structure of the output.",
+    "Write a concise `usage_example` in the form of a cURL request, demonstrating how to call the API endpoint.",
+    "Structure the final output as a single JSON object that strictly adheres to the `output_format.json_schema`."
+  ],
+  "chain_of_thought": {
+    "plan": [
+      "First, I'll read the function's code to understand its logic. I'll look at the function name, parameter names, and the operations performed inside.",
+      "Based on whether the function retrieves or creates data, I'll determine the appropriate HTTP method, likely GET for retrieval and POST for creation.",
+      "I'll devise a logical endpoint path based on the function's purpose, like `/users/{userId}`.",
+      "I will then list each parameter from the function signature. I'll inspect how each parameter is used to infer its type (string, number, etc.) and purpose.",
+      "I'll examine the 'return' statement of the function to understand the structure of the output object and translate that into a formal JSON Schema.",
+      "I will then write a simple but clear description of the function's overall goal.",
+      "Finally, I will synthesize all this information into a cURL command for the usage example, and then build the final, complete JSON output."
+    ]
+  },
+  "few_shot_examples": [
+    {
+      "input": {
+        "source_code_function": "function getUserProfile(userId) {\n  const user = db.users.find({ id: userId });\n  if (!user) return null;\n  return {\n    id: user.id,\n    name: `${user.firstName} ${user.lastName}`,\n    email: user.email,\n    isActive: user.status === 'active'\n  };\n}"
+      },
+      "output": {
+        "api_documentation": {
+          "description": "Retrieves a user's profile information by their unique ID.",
+          "httpMethod": "GET",
+          "endpointPath": "/users/{userId}",
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "dataType": "string",
+              "description": "The unique identifier of the user.",
+              "required": true
+            }
+          ],
+          "returnValueSchema": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "email": { "type": "string", "format": "email" },
+              "isActive": { "type": "boolean" }
+            }
+          },
+          "usageExample": "curl -X GET https://api.example.com/users/u-123"
+        }
+      }
+    }
+  ],
+  "input_variables": {
+    "source_code_function": {
+      "type": "string",
+      "description": "A string containing the source code of a single function."
+    }
+  },
+  "output_format": {
+    "type": "json",
+    "json_schema": {
+      "type": "object",
+      "properties": {
+        "api_documentation": {
+          "type": "object",
+          "properties": {
+            "description": { "type": "string" },
+            "httpMethod": { "type": "string" },
+            "endpointPath": { "type": "string" },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "in": { "type": "string", "enum": ["path", "query", "body"] },
+                  "dataType": { "type": "string" },
+                  "description": { "type": "string" },
+                  "required": { "type": "boolean" }
+                },
+                "required": ["name", "in", "dataType", "description", "required"]
+              }
+            },
+            "returnValueSchema": { "type": "object" },
+            "usageExample": { "type": "string" }
+          },
+          "required": ["description", "httpMethod", "endpointPath", "parameters", "returnValueSchema", "usageExample"]
+        }
+      },
+      "required": ["api_documentation"]
+    }
+  }
+} 

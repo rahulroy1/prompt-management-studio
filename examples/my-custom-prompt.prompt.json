@@ -1,0 +1,79 @@
+{
+  "$schema": "https://promptstudio.dev/schemas/v2.0/prompt.schema.json",
+  "title": "Email Response Generator",
+  "description": "Generate professional email responses based on incoming emails",
+  "models": ["gpt-4-turbo", "claude-3-sonnet"],
+  "prompt": {
+    "persona": {
+      "role": "You are a professional business communication expert.",
+      "tone": "Professional and courteous"
+    },
+    "instructions": [
+      "Read the incoming email carefully",
+      "Identify the key points that need to be addressed",
+      "Write a clear, professional response",
+      "Maintain appropriate business tone"
+    ],
+    "output_format": {
+      "format": "text",
+      "template": "Subject: Re: {{subject}}\n\nDear {{sender_name}},\n\n[Your response here]\n\nBest regards,\n[Your name]"
+    }
+  },
+  "user_input_template": "Incoming email:\nFrom: {{sender_email}}\nSubject: {{subject}}\nMessage: {{email_content}}\n\nPlease generate a professional response.",
+  "variables": [
+    {
+      "name": "sender_email",
+      "type": "string",
+      "description": "Email address of the sender",
+      "required": true
+    },
+    {
+      "name": "subject",
+      "type": "string", 
+      "description": "Subject line of the incoming email",
+      "required": true
+    },
+    {
+      "name": "email_content",
+      "type": "string",
+      "description": "Content of the incoming email",
+      "required": true
+    },
+    {
+      "name": "sender_name",
+      "type": "string",
+      "description": "Name of the email sender",
+      "required": false,
+      "default": "Sir/Madam"
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "Meeting Request",
+      "description": "Response to a meeting request",
+      "inputs": {
+        "sender_email": "john.doe@example.com",
+        "sender_name": "John Doe",
+        "subject": "Meeting Request - Project Discussion",
+        "email_content": "Hi, I'd like to schedule a meeting to discuss the new project requirements. Are you available next Tuesday at 2 PM?"
+      }
+    },
+    {
+      "name": "Information Request", 
+      "description": "Response to a request for information",
+      "inputs": {
+        "sender_email": "client@company.com",
+        "sender_name": "Client",
+        "subject": "Product Information Request",
+        "email_content": "Could you please send me more details about your premium package pricing and features?"
+      }
+    }
+  ],
+  "metadata": {
+    "author": "Your Name",
+    "created": "2024-06-17T16:30:00.000Z",
+    "version": "1.0.0",
+    "category": "customer-service",
+    "difficulty": "intermediate"
+  }
+} 

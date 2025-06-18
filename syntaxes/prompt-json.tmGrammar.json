@@ -1,0 +1,115 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Prompt JSON",
+  "scopeName": "source.prompt.json",
+  "patterns": [
+    {
+      "include": "#value"
+    }
+  ],
+  "repository": {
+    "value": {
+      "patterns": [
+        {
+          "include": "#prompt-schema"
+        },
+        {
+          "include": "#object"
+        },
+        {
+          "include": "#array"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#boolean"
+        },
+        {
+          "include": "#null"
+        }
+      ]
+    },
+    "prompt-schema": {
+      "patterns": [
+        {
+          "match": "\"(title|description|models|user_input_template|variables|test_cases|metadata)\"(?=\\s*:)",
+          "name": "support.type.property-name.prompt-schema.json"
+        },
+        {
+          "match": "\"(prompt)\"(?=\\s*:)",
+          "name": "entity.name.type.prompt-schema.json"
+        },
+        {
+          "match": "\"(persona|instructions|chain_of_thought|few_shot_examples|output_format)\"(?=\\s*:)",
+          "name": "entity.name.function.prompt-schema.json"
+        },
+        {
+          "match": "\"(role|tone)\"(?=\\s*:)",
+          "name": "variable.parameter.prompt-schema.json"
+        },
+        {
+          "match": "\"(gpt-4|claude-3|gemini|gpt-4-turbo|claude-3-sonnet|claude-3-haiku)\"",
+          "name": "constant.language.model-name.json"
+        },
+        {
+          "match": "\\{\\{[^}]+\\}\\}",
+          "name": "variable.other.template.json"
+        }
+      ]
+    },
+    "object": {
+      "begin": "\\{",
+      "end": "\\}",
+      "name": "meta.structure.dictionary.json",
+      "patterns": [
+        {
+          "include": "#objectkey"
+        },
+        {
+          "include": "#value"
+        }
+      ]
+    },
+    "array": {
+      "begin": "\\[",
+      "end": "\\]",
+      "name": "meta.structure.array.json",
+      "patterns": [
+        {
+          "include": "#value"
+        }
+      ]
+    },
+    "objectkey": {
+      "match": "\"[^\"]*\"(?=\\s*:)",
+      "name": "support.type.property-name.json"
+    },
+    "string": {
+      "begin": "\"",
+      "end": "\"",
+      "name": "string.quoted.double.json",
+      "patterns": [
+        {
+          "match": "\\\\.",
+          "name": "constant.character.escape.json"
+        }
+      ]
+    },
+    "number": {
+      "match": "-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?",
+      "name": "constant.numeric.json"
+    },
+    "boolean": {
+      "match": "\\b(true|false)\\b",
+      "name": "constant.language.json"
+    },
+    "null": {
+      "match": "\\bnull\\b",
+      "name": "constant.language.null.json"
+    }
+  }
+} 

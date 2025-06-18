@@ -1,0 +1,48 @@
+{
+  "$schema": "https://promptstudio.dev/schemas/v2.0/prompt.schema.json",
+  "title": "why-coffee-should-be-hot",
+  "description": "Evaluate different stages of hotness for drinking coffe",
+  "models": [
+    "gpt-4o-mini"
+  ],
+  "prompt": {
+    "persona": {
+      "role": "You are a data analyst with expertise in interpreting data and generating insights."
+    },
+    "instructions": [
+      "Analyze the provided data carefully",
+      "Identify key patterns and trends",
+      "Provide actionable insights",
+      "Support conclusions with evidence from the data"
+    ],
+    "chain_of_thought": [
+      "First, understand the problem",
+      "Then, break it down into steps",
+      "Finally, provide a solution"
+    ]
+  },
+  "user_input_template": "{{user_query}}",
+  "variables": [
+    {
+      "name": "user_query",
+      "type": "string",
+      "description": "The user's query or request",
+      "required": true
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "Basic Test",
+      "inputs": {
+        "user_query": "Hello, how are you?"
+      }
+    }
+  ],
+  "metadata": {
+    "author": "Prompt Studio User",
+    "created": "2025-06-18T09:00:41.041Z",
+    "version": "1.0.0",
+    "category": "data-analysis",
+    "difficulty": "beginner"
+  }
+}

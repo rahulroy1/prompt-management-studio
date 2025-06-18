@@ -1,0 +1,292 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://promptstudio.dev/schemas/v2.0/prompt.schema.json",
+  "title": "Prompt Studio Schema",
+  "description": "Schema for structured prompt engineering with multi-model evaluation support",
+  "type": "object",
+  "required": ["title", "prompt", "user_input_template"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema URL for validation"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title for this prompt",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what this prompt accomplishes",
+      "maxLength": 500
+    },
+    "models": {
+      "type": "array",
+      "description": "AI models to evaluate this prompt against",
+      "items": {
+        "type": "string",
+        "enum": [
+          "gpt-4-turbo",
+          "gpt-4",
+          "gpt-3.5-turbo",
+          "claude-3-opus",
+          "claude-3-sonnet",
+          "claude-3-haiku",
+          "gemini-pro",
+          "gemini-pro-vision"
+        ]
+      },
+      "default": ["gpt-4-turbo", "claude-3-sonnet"],
+      "minItems": 1,
+      "maxItems": 8
+    },
+    "prompt": {
+      "type": "object",
+      "description": "Structured prompt components following best practices",
+      "required": ["persona", "instructions"],
+      "properties": {
+        "persona": {
+          "type": "object",
+          "description": "Define the AI's role and personality",
+          "required": ["role"],
+          "properties": {
+            "role": {
+              "type": "string",
+              "description": "What the AI should act as (e.g., 'You are a senior software engineer')",
+              "minLength": 10,
+              "maxLength": 500
+            },
+            "tone": {
+              "type": "string",
+              "description": "Communication style (e.g., 'Helpful and professional')",
+              "maxLength": 200
+            },
+            "expertise": {
+              "type": "array",
+              "description": "Areas of expertise or specialization",
+              "items": {
+                "type": "string",
+                "maxLength": 50
+              },
+              "maxItems": 10
+            }
+          }
+        },
+        "instructions": {
+          "type": "array",
+          "description": "Clear, specific instructions for the task",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          },
+          "minItems": 1,
+          "maxItems": 10
+        },
+        "chain_of_thought": {
+          "type": "array",
+          "description": "Step-by-step reasoning process for the AI to follow",
+          "items": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200
+          },
+          "maxItems": 10
+        },
+        "few_shot_examples": {
+          "type": "array",
+          "description": "Example input-output pairs to guide the AI",
+          "items": {
+            "type": "object",
+            "required": ["input", "output"],
+            "properties": {
+              "input": {
+                "type": "string",
+                "description": "Example input",
+                "maxLength": 1000
+              },
+              "output": {
+                "type": "string",
+                "description": "Expected output for this input",
+                "maxLength": 2000
+              },
+              "explanation": {
+                "type": "string",
+                "description": "Why this is a good example",
+                "maxLength": 300
+              }
+            }
+          },
+          "maxItems": 5
+        },
+        "output_format": {
+          "type": "object",
+          "description": "Specify the desired output structure",
+          "properties": {
+            "format": {
+              "type": "string",
+              "enum": ["text", "json", "yaml", "markdown", "html", "xml"],
+              "default": "text",
+              "description": "Output format type"
+            },
+            "schema": {
+              "type": "object",
+              "description": "JSON schema for structured outputs (when format is 'json')"
+            },
+            "template": {
+              "type": "string",
+              "description": "Template or example of the expected output format",
+              "maxLength": 1000
+            }
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "description": "Important limitations or restrictions",
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "maxItems": 5
+        }
+      }
+    },
+    "user_input_template": {
+      "type": "string",
+      "description": "Template for user input with variables like {{variable_name}}",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "variables": {
+      "type": "array",
+      "description": "Variables used in the user_input_template",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "description": "Variable name (alphanumeric and underscore only)"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean", "array"],
+            "description": "Variable data type"
+          },
+          "description": {
+            "type": "string",
+            "description": "What this variable represents",
+            "maxLength": 200
+          },
+          "required": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether this variable is required"
+          },
+          "default": {
+            "description": "Default value for this variable"
+          }
+        }
+      }
+    },
+    "test_cases": {
+      "type": "array",
+      "description": "Test scenarios with specific input values",
+      "items": {
+        "type": "object",
+        "required": ["name", "inputs"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Descriptive name for this test case",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "description": "What this test case validates",
+            "maxLength": 300
+          },
+          "inputs": {
+            "type": "object",
+            "description": "Values for variables defined in the variables array",
+            "additionalProperties": true
+          },
+          "expected_output": {
+            "type": "string",
+            "description": "Expected response for validation",
+            "maxLength": 2000
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags for categorizing this test case",
+            "items": {
+              "type": "string",
+              "maxLength": 30
+            },
+            "maxItems": 5
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 20
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata about this prompt",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Prompt author",
+          "maxLength": 100
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time", 
+          "description": "Last update timestamp"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version number"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Categorization tags",
+          "items": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "maxItems": 10
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "code-review",
+            "content-generation",
+            "data-analysis", 
+            "customer-service",
+            "documentation",
+            "translation",
+            "summarization",
+            "creative-writing",
+            "other"
+          ],
+          "description": "Primary use case category"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"],
+          "description": "Complexity level"
+        }
+      }
+    }
+  }
+} 
