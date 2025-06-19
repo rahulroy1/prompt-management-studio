@@ -68,32 +68,36 @@
     "commands": [
       {
         "command": "promptStudio.evaluatePrompt",
-        "title": "Evaluate Prompt",
-        "icon": "$(play)"
+        "title": "Prompt Studio: Evaluate Prompt",
+        "icon": "$(play)",
+        "category": "Prompt Studio"
       },
       {
         "command": "promptStudio.openPromptIDE",
-        "title": "Open Prompt IDE",
-        "icon": "$(edit)"
+        "title": "Prompt Studio: Open Prompt IDE",
+        "icon": "$(edit)",
+        "category": "Prompt Studio"
       },
       {
         "command": "promptStudio.createPrompt",
-        "title": "Create New Prompt",
-        "icon": "$(add)"
+        "title": "Prompt Studio: Create New Prompt",
+        "icon": "$(add)",
+        "category": "Prompt Studio"
       },
       {
         "command": "promptStudio.configureApiKeys",
-        "title": "Configure API Keys",
-        "icon": "$(key)"
+        "title": "Prompt Studio: Configure API Keys",
+        "icon": "$(key)",
+        "category": "Prompt Studio"
       },
       {
         "command": "promptStudio.openTemplateLibrary",
-        "title": "Browse Template Library",
+        "title": "Prompt Studio: Browse Template Library",
         "category": "Prompt Studio"
       },
       {
         "command": "promptStudio.comparePromptVersions",
-        "title": "Compare Prompt Versions",
+        "title": "Prompt Studio: Compare Prompt Versions",
         "category": "Prompt Studio"
       }
     ],
