@@ -332,13 +332,15 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
   }
 
   private async exportAsJSON(promptData: PromptFile) {
-    const uri = await vscode.window.showSaveDialog({
+    const options: vscode.SaveDialogOptions = {
+      defaultUri: vscode.Uri.joinPath(this.context.extensionUri, 'untitled.prompt.json'),
       filters: {
         'Prompt JSON': ['prompt.json'],
         'JSON': ['json']
       }
-    });
+    };
 
+    const uri = await vscode.window.showSaveDialog(options);
     if (uri) {
       await vscode.workspace.fs.writeFile(
         uri,
