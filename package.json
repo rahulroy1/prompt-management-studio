@@ -38,8 +38,13 @@
     "languages": [
       {
         "id": "prompt-json",
-        "aliases": ["Prompt JSON", "prompt-json"],
-        "extensions": [".prompt.json"],
+        "aliases": [
+          "Prompt JSON",
+          "prompt-json"
+        ],
+        "extensions": [
+          ".prompt.json"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],
@@ -154,7 +159,10 @@
       "properties": {
         "promptStudio.defaultModels": {
           "type": "array",
-          "default": ["gpt-4-turbo", "claude-3-sonnet"],
+          "default": [
+            "gpt-4-turbo",
+            "claude-3-sonnet"
+          ],
           "description": "Default AI models to evaluate prompts against",
           "items": {
             "type": "string"
@@ -184,19 +192,20 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
-    "@types/vscode": "^1.84.0",
+    "@types/mocha": "^10.0.3",
     "@types/node": "18.x",
+    "@types/vscode": "^1.84.0",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
-    "eslint": "^8.54.0",
-    "typescript": "^5.3.2",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
-    "@types/mocha": "^10.0.3"
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0",
+    "@google/generative-ai": "^0.24.1",
     "ajv": "^8.12.0",
-    "openai": "^4.24.1",
-    "@anthropic-ai/sdk": "^0.9.1"
+    "openai": "^4.24.1"
   }
-} 
+}

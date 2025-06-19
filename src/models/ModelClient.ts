@@ -1,7 +1,10 @@
 import OpenAI from 'openai';
 import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ApiKeyManager } from '../auth/ApiKeyManager';
 import { ModelType, CompiledPrompt } from '../types/PromptTypes';
+
+type AnthropicMessageParam = Anthropic.Messages.MessageParam;
 
 export interface ModelResponse {
   content: string;
@@ -64,13 +67,35 @@ export class ModelClient {
       throw new Error('Anthropic API key not configured');
     }
 
-    // TODO: Implement Anthropic API integration
-    // For now, return a placeholder response
-    return {
-      content: `[Claude ${model} integration coming soon - this is a placeholder response]`,
-      tokens: 100,
-      cost_estimate: 0.01
-    };
+    const anthropic = new Anthropic({ apiKey });
+    const { system, messages } = this.formatAnthropicPrompt(prompt);
+
+    try {
+      const response = await anthropic.messages.create({
+        model: this.mapAnthropicModel(model),
+        ...(system && { system }),
+        messages,
+        max_tokens: 4096,
+        temperature: 0.1,
+      });
+
+      const content = response.content
+        .filter(block => block.type === 'text')
+        .map(block => block.text)
+        .join('');
+        
+      const { input_tokens, output_tokens } = response.usage;
+      const total_tokens = input_tokens + output_tokens;
+
+      return {
+        content,
+        tokens: total_tokens,
+        cost_estimate: this.estimateAnthropicCost(model, input_tokens, output_tokens),
+      };
+    } catch (error) {
+      console.error('Anthropic API error:', error);
+      throw new Error(`Anthropic API error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   private async callGemini(model: ModelType, prompt: CompiledPrompt, apiKey?: string | undefined): Promise<ModelResponse> {
@@ -78,13 +103,32 @@ export class ModelClient {
       throw new Error('Google API key not configured');
     }
 
-    // TODO: Implement Google Gemini API integration
-    // For now, return a placeholder response
-    return {
-      content: `[Gemini ${model} integration coming soon - this is a placeholder response]`,
-      tokens: 100,
-      cost_estimate: 0.01
-    };
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const gemini = genAI.getGenerativeModel({ model: this.mapGeminiModel(model) });
+
+    const { contents, systemInstruction } = this.formatGeminiPrompt(prompt);
+
+    try {
+      const result = await gemini.generateContent({
+        contents,
+        systemInstruction,
+      });
+
+      const response = result.response;
+      const content = response.text();
+      // Note: Google's SDK does not provide token counts directly in the response yet.
+      // This is a known limitation. We can estimate or wait for SDK updates.
+      const tokens = 0; // Placeholder
+
+      return {
+        content,
+        tokens,
+        cost_estimate: 0, // Placeholder until token count is available
+      };
+    } catch (error) {
+      console.error('Gemini API error:', error);
+      throw new Error(`Gemini API error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   private mapOpenAIModel(model: ModelType): string {
@@ -111,6 +155,64 @@ export class ModelClient {
       default:
         return 'claude-3-sonnet-20240229';
     }
+  }
+
+  private mapGeminiModel(model: ModelType): string {
+    switch (model) {
+      case 'gemini-1.5-pro-latest':
+        return 'gemini-1.5-pro-latest';
+      case 'gemini-1.5-flash-latest':
+        return 'gemini-1.5-flash-latest';
+      case 'gemini-pro':
+        return 'gemini-pro';
+      default:
+        return 'gemini-1.5-pro-latest';
+    }
+  }
+
+  private formatAnthropicPrompt(prompt: CompiledPrompt): { system: string | undefined; messages: Anthropic.MessageParam[] } {
+    let system: string | undefined = undefined;
+    const messages: Anthropic.MessageParam[] = [];
+
+    // Anthropic uses a 'system' parameter for the system role
+    const systemMessage = prompt.messages.find(msg => msg.role === 'system');
+    if (systemMessage) {
+      system = systemMessage.content;
+    }
+
+    // Filter out system messages and format the rest
+    prompt.messages
+      .filter(msg => msg.role !== 'system')
+      .forEach(msg => {
+        messages.push({
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+        });
+      });
+
+    return { system, messages };
+  }
+
+  private formatGeminiPrompt(prompt: CompiledPrompt): { systemInstruction?: any; contents: any[] } {
+    let systemInstruction: any | undefined = undefined;
+    const contents: any[] = [];
+
+    const systemMessage = prompt.messages.find(msg => msg.role === 'system');
+    if (systemMessage) {
+      systemInstruction = { role: 'system', parts: [{ text: systemMessage.content }] };
+    }
+    
+    // Gemini uses a 'model' role for assistant messages
+    prompt.messages
+      .filter(msg => msg.role !== 'system')
+      .forEach(msg => {
+        contents.push({
+          role: msg.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: msg.content }],
+        });
+      });
+      
+    return { systemInstruction, contents };
   }
 
   private estimateOpenAICost(model: ModelType, tokens: number): number {
