@@ -5,8 +5,14 @@ import { PromptCreator } from './creator/PromptCreator';
 import { ApiKeyManager } from './auth/ApiKeyManager';
 import { PromptBuilderProvider } from './builder/PromptBuilderProvider';
 
+let outputChannel: vscode.OutputChannel;
+
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Prompt Studio extension is now active!');
+  // Create output channel for logging
+  outputChannel = vscode.window.createOutputChannel('Prompt Studio');
+  context.subscriptions.push(outputChannel);
+  
+  outputChannel.appendLine('Prompt Studio extension is now active!');
 
   // Initialize services
   const apiKeyManager = new ApiKeyManager(context);
@@ -28,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await promptEvaluator.evaluatePrompt(targetUri);
       } catch (error) {
-        console.error('Failed to evaluate prompt:', error);
+        outputChannel.appendLine(`Failed to evaluate prompt: ${error instanceof Error ? error.message : 'Unknown error'}`);
         vscode.window.showErrorMessage(`Failed to evaluate prompt: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }),
@@ -45,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await promptIDEProvider.openPromptIDE(targetUri);
       } catch (error) {
-        console.error('Failed to open Prompt IDE:', error);
+        outputChannel.appendLine(`Failed to open Prompt IDE: ${error instanceof Error ? error.message : 'Unknown error'}`);
         vscode.window.showErrorMessage(`Failed to open Prompt IDE: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }),
@@ -54,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await promptCreator.createNewPrompt(uri);
       } catch (error) {
-        console.error('Failed to create prompt:', error);
+        outputChannel.appendLine(`Failed to create prompt: ${error instanceof Error ? error.message : 'Unknown error'}`);
         vscode.window.showErrorMessage(`Failed to create prompt: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }),
@@ -63,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         await apiKeyManager.configureApiKeys();
       } catch (error) {
-        console.error('Failed to configure API keys:', error);
+        outputChannel.appendLine(`Failed to configure API keys: ${error instanceof Error ? error.message : 'Unknown error'}`);
         vscode.window.showErrorMessage(`Failed to configure API keys: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     })
@@ -86,7 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
   }
 }
 
-async function showWelcomeMessage(context: vscode.ExtensionContext) {
+async function showWelcomeMessage(_context: vscode.ExtensionContext) {
   const action = await vscode.window.showInformationMessage(
     'Welcome to Prompt Studio! Create your first prompt or configure API keys to get started.',
     'Create Prompt',
@@ -102,11 +108,12 @@ async function showWelcomeMessage(context: vscode.ExtensionContext) {
       vscode.commands.executeCommand('promptStudio.configureApiKeys');
       break;
     case 'Learn More':
-      vscode.env.openExternal(vscode.Uri.parse('https://github.com/prompt-studio/vscode-extension#readme'));
+      vscode.env.openExternal(vscode.Uri.parse('https://github.com/rahulroy1/prompt-management-studio#readme'));
       break;
   }
 }
 
 export function deactivate() {
-  console.log('Prompt Studio extension is now deactivated');
+  outputChannel?.appendLine('Prompt Studio extension is now deactivated');
+  outputChannel?.dispose();
 } 

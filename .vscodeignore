@@ -1,0 +1,50 @@
+# Source files
+src/**
+*.ts
+
+# Test files
+**/test/**
+**/*.test.*
+
+# Development files
+.vscode/**
+.git/**
+.gitignore
+.eslintrc.*
+tsconfig.json
+*.md
+!README.md
+
+# Dependencies and build artifacts
+node_modules/**
+out/test/**
+*.vsix
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (keep only README)
+docs/**
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+CHANGELOG.md
+SECURITY.md
+*.md
+!README.md
+
+# CI/CD
+.github/**
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+
+# IDE files
+.idea/**
+*.swp
+*.swo
+
+# Package files
+package-lock.json 

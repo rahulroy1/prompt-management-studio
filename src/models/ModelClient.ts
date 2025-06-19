@@ -4,8 +4,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ApiKeyManager } from '../auth/ApiKeyManager';
 import { ModelType, CompiledPrompt } from '../types/PromptTypes';
 
-type AnthropicMessageParam = Anthropic.Messages.MessageParam;
-
 export interface ModelResponse {
   content: string;
   tokens?: number | undefined;
@@ -13,10 +11,10 @@ export interface ModelResponse {
 }
 
 export class ModelClient {
-  constructor(private apiKeyManager: ApiKeyManager) {}
+  constructor(private _apiKeyManager: ApiKeyManager) {}
 
   async callModel(model: ModelType, prompt: CompiledPrompt): Promise<ModelResponse> {
-    const credentials = await this.apiKeyManager.getCredentials();
+    const credentials = await this._apiKeyManager.getCredentials();
 
     if (model.startsWith('gpt-')) {
       return this.callOpenAI(model, prompt, credentials.openai_api_key);
@@ -109,6 +107,22 @@ export class ModelClient {
     const { contents, systemInstruction } = this.formatGeminiPrompt(prompt);
 
     try {
+      // Get token count for input
+      const tokenCountRequest = { contents };
+      if (systemInstruction) {
+        tokenCountRequest.contents.unshift(systemInstruction);
+      }
+      
+      let inputTokens = 0;
+      try {
+        const tokenCountResult = await gemini.countTokens(tokenCountRequest);
+        inputTokens = tokenCountResult.totalTokens || 0;
+      } catch (tokenError) {
+        // If token counting fails, estimate based on character count
+        const totalText = contents.map(c => c.parts.map((p: any) => p.text).join('')).join('');
+        inputTokens = Math.ceil(totalText.length / 4); // Rough estimate: 4 chars per token
+      }
+
       const result = await gemini.generateContent({
         contents,
         systemInstruction,
@@ -116,14 +130,15 @@ export class ModelClient {
 
       const response = result.response;
       const content = response.text();
-      // Note: Google's SDK does not provide token counts directly in the response yet.
-      // This is a known limitation. We can estimate or wait for SDK updates.
-      const tokens = 0; // Placeholder
+      
+      // Estimate output tokens based on response length
+      const outputTokens = Math.ceil(content.length / 4);
+      const totalTokens = inputTokens + outputTokens;
 
       return {
         content,
-        tokens,
-        cost_estimate: 0, // Placeholder until token count is available
+        tokens: totalTokens,
+        cost_estimate: this.estimateGeminiCost(model, inputTokens, outputTokens),
       };
     } catch (error) {
       console.error('Gemini API error:', error);
@@ -236,6 +251,18 @@ export class ModelClient {
     };
 
     const modelCosts = costs[model as keyof typeof costs] || costs['claude-3-sonnet'];
+    return (inputTokens / 1000) * modelCosts.input + (outputTokens / 1000) * modelCosts.output;
+  }
+
+  private estimateGeminiCost(model: ModelType, inputTokens: number, outputTokens: number): number {
+    // Rough cost estimates per 1K tokens (as of 2024)
+    const costs = {
+      'gemini-1.5-pro-latest': { input: 0.001, output: 0.002 },
+      'gemini-1.5-flash-latest': { input: 0.001, output: 0.002 },
+      'gemini-pro': { input: 0.001, output: 0.002 }
+    };
+
+    const modelCosts = costs[this.mapGeminiModel(model) as keyof typeof costs] || costs['gemini-1.5-pro-latest'];
     return (inputTokens / 1000) * modelCosts.input + (outputTokens / 1000) * modelCosts.output;
   }
 } 

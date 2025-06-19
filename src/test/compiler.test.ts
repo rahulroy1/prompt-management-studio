@@ -47,8 +47,11 @@ suite('PromptCompiler Test Suite', () => {
     const variables = { name: 'John Doe', age: 30 };
     const compiled = compiler.compile(promptFile, variables);
 
-    assert.strictEqual(compiled.messages[0].role, 'user');
-    assert.strictEqual(compiled.messages[0].content, 'User: John Doe, Age: 30');
+    assert.ok(compiled.messages.length > 0);
+    const firstMessage = compiled.messages[0];
+    assert.ok(firstMessage);
+    assert.strictEqual(firstMessage.role, 'user');
+    assert.strictEqual(firstMessage.content, 'User: John Doe, Age: 30');
   });
 
   test('should include few-shot examples', () => {
@@ -98,8 +101,11 @@ suite('PromptCompiler Test Suite', () => {
     const variables = { text: 'My name is Jane.' };
     const compiled = compiler.compile(promptFile, variables);
     
-    assert.ok(compiled.messages[0].content.includes('Output Format: json'));
-    assert.ok(compiled.messages[0].content.includes('"type": "object"'));
+    assert.ok(compiled.messages.length > 0);
+    const firstMessage = compiled.messages[0];
+    assert.ok(firstMessage);
+    assert.ok(firstMessage.content.includes('Output Format: json'));
+    assert.ok(firstMessage.content.includes('"type": "object"'));
     assert.deepStrictEqual(compiled.parameters, {
         temperature: 0.1,
         response_format: { type: 'json_object' }
@@ -139,6 +145,9 @@ suite('PromptCompiler Test Suite', () => {
         '- Do not use external libraries.'
     ].join('\n');
 
-    assert.strictEqual(compiled.messages[0].content, expectedSystemMessage);
+    assert.ok(compiled.messages.length > 0);
+    const firstMessage = compiled.messages[0];
+    assert.ok(firstMessage);
+    assert.strictEqual(firstMessage.content, expectedSystemMessage);
   });
 }); 

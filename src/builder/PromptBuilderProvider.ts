@@ -1,11 +1,10 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import { PromptFile, ModelType } from '../types/PromptTypes';
 import { ApiKeyManager } from '../auth/ApiKeyManager';
 
 export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
-  public static register(context: vscode.ExtensionContext, apiKeyManager: ApiKeyManager): vscode.Disposable {
-    const provider = new PromptBuilderProvider(context, apiKeyManager);
+  public static register(_context: vscode.ExtensionContext, _apiKeyManager: ApiKeyManager): vscode.Disposable {
+    const provider = new PromptBuilderProvider(_context, _apiKeyManager);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
       'promptStudio.promptBuilder',
       provider,
@@ -20,8 +19,8 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
   }
 
   constructor(
-    private readonly context: vscode.ExtensionContext,
-    private readonly apiKeyManager: ApiKeyManager
+    private readonly _context: vscode.ExtensionContext,
+    private readonly _apiKeyManager: ApiKeyManager
   ) {}
 
   public async resolveCustomTextEditor(
@@ -35,7 +34,7 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
     };
 
     // Set webview content
-    webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, document);
+    webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
       // Handle changes from webview
   webviewPanel.webview.onDidReceiveMessage(
@@ -72,13 +71,13 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
     this.updateWebview(webviewPanel.webview, document);
   }
 
-  private getHtmlForWebview(webview: vscode.Webview, document: vscode.TextDocument): string {
+  private getHtmlForWebview(webview: vscode.Webview): string {
     // Get resource URIs
     const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, 'media', 'promptBuilder.js')
+      vscode.Uri.joinPath(this._context.extensionUri, 'media', 'promptBuilder.js')
     );
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, 'media', 'promptBuilder.css')
+      vscode.Uri.joinPath(this._context.extensionUri, 'media', 'promptBuilder.css')
     );
 
     // Use a nonce to only allow specific scripts
@@ -235,13 +234,13 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
       const { ModelClient } = await import('../models/ModelClient');
       
       const compiler = new PromptCompiler();
-      const modelClient = new ModelClient(this.apiKeyManager);
+      const modelClient = new ModelClient(this._apiKeyManager);
       
       // Get selected models or default ones
       const modelsToTest = promptData.models || ['gpt-4o-mini'];
       
       // Ensure we have credentials
-      const hasCredentials = await this.apiKeyManager.ensureCredentialsForModels(modelsToTest);
+      const hasCredentials = await this._apiKeyManager.ensureCredentialsForModels(modelsToTest);
       if (!hasCredentials) {
         webview.postMessage({
           type: 'testResults',
@@ -317,21 +316,20 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
     }
   }
 
-  private async exportPrompt(promptData: PromptFile, format: string) {
-    // Handle different export formats
+  private async exportPrompt(_promptData: PromptFile, format: string) {
     switch (format) {
       case 'json':
-        await this.exportAsJSON(promptData);
+        await this.exportAsJSON(_promptData);
         break;
       case 'package':
-        await this.exportAsPackage(promptData);
+        await this.exportAsPackage(_promptData);
         break;
     }
   }
 
   private async exportAsJSON(promptData: PromptFile) {
     const options: vscode.SaveDialogOptions = {
-      defaultUri: vscode.Uri.joinPath(this.context.extensionUri, 'untitled.prompt.json'),
+      defaultUri: vscode.Uri.joinPath(this._context.extensionUri, 'untitled.prompt.json'),
       filters: {
         'Prompt JSON': ['prompt.json'],
         'JSON': ['json']
@@ -348,10 +346,9 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
     }
   }
 
-  private async exportAsPackage(promptData: PromptFile) {
-    // Create a complete package with documentation, test results, etc.
-    // Implementation will include performance data and usage instructions
-    vscode.window.showInformationMessage('Package export coming soon!');
+  private async exportAsPackage(_promptData: PromptFile) {
+    // Implementation for exporting as a package
+    vscode.window.showInformationMessage('Export as package is not yet implemented.');
   }
 
   private getNonce() {
@@ -372,7 +369,7 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
 
     const models = modelMap[family];
     if (models) {
-        await this.apiKeyManager.ensureCredentialsForModels(models);
+        await this._apiKeyManager.ensureCredentialsForModels(models);
     }
   }
 } 
