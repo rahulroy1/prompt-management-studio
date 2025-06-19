@@ -16,10 +16,8 @@
         title: document.getElementById('title'),
         description: document.getElementById('description'),
         personaRole: document.getElementById('persona-role'),
-        instructionsList: document.getElementById('instructions-list'),
-        addInstructionBtn: document.getElementById('add-instruction'),
-        chainOfThoughtList: document.getElementById('chain-of-thought-list'),
-        addChainStepBtn: document.getElementById('add-chain-step'),
+        instructions: document.getElementById('instructions'),
+        chainOfThought: document.getElementById('chain-of-thought'),
         examplesList: document.getElementById('examples-list'),
         addExampleBtn: document.getElementById('add-example'),
         userInputTemplate: document.getElementById('user-input-template'),
@@ -41,14 +39,12 @@
     function initializeEventListeners() {
         // Form change listeners
         Object.values(elements).forEach(element => {
-            if (element && (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA')) {
+            if (element && (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT')) {
                 element.addEventListener('input', handleFormChange);
             }
         });
         
         // Button listeners
-        elements.addInstructionBtn?.addEventListener('click', addInstruction);
-        elements.addChainStepBtn?.addEventListener('click', addChainStep);
         elements.addExampleBtn?.addEventListener('click', addExample);
         elements.addModelBtn?.addEventListener('click', () => addModelRow());
         elements.runTestBtn?.addEventListener('click', runTest);
@@ -92,11 +88,13 @@
         if (elements.personaRole) elements.personaRole.value = prompt.prompt?.persona?.role || '';
         if (elements.userInputTemplate) elements.userInputTemplate.value = prompt.user_input_template || '';
         
-        // Load instructions
-        loadInstructions(prompt.prompt?.instructions || []);
-        
-        // Load chain of thought
-        loadChainOfThought(prompt.prompt?.chain_of_thought || []);
+        // Load instructions and chain of thought into textareas
+        if (elements.instructions) {
+            elements.instructions.value = (prompt.prompt?.instructions || []).join('\n');
+        }
+        if (elements.chainOfThought) {
+            elements.chainOfThought.value = (prompt.prompt?.chain_of_thought || []).join('\n');
+        }
         
         // Load examples
         loadExamples(prompt.prompt?.few_shot_examples || []);
@@ -288,64 +286,56 @@
         }
     }
     
-    // Collect form data into prompt object
+    // Collect form data into a prompt object
     function collectFormData() {
-        const instructions = Array.from(elements.instructionsList?.querySelectorAll('input') || [])
-            .map(input => input.value)
-            .filter(text => text.trim() !== '');
+        const prompt = { ...currentPrompt };
+
+        // Basic fields
+        prompt.title = elements.title?.value;
+        prompt.description = elements.description?.value;
+        prompt.user_input_template = elements.userInputTemplate?.value;
         
-        const chainOfThought = Array.from(elements.chainOfThoughtList?.querySelectorAll('input') || [])
-            .map(input => input.value)
-            .filter(text => text.trim() !== '');
-        
-        const examples = Array.from(elements.examplesList?.querySelectorAll('.example-item') || [])
-            .map(item => {
-                const textareas = item.querySelectorAll('textarea');
-                return {
-                    input: textareas[0]?.value || '',
-                    output: textareas[1]?.value || ''
-                };
-            })
-            .filter(example => example.input.trim() || example.output.trim());
-        
-        const selectedModels = Array.from(elements.modelSelectionList?.querySelectorAll('.model-selection-row select:last-of-type') || [])
-            .map(select => select.value)
-            .filter(Boolean);
-        
-        const outputFormat = {};
-        if (elements.outputFormatType?.value) {
-            outputFormat.format = elements.outputFormatType.value;
+        // Prompt structure
+        if (!prompt.prompt) {
+            prompt.prompt = { persona: { role: '' }, instructions: [] };
         }
-        if (elements.outputFormatSchema?.value) {
-            outputFormat.description = elements.outputFormatSchema.value;
-        }
+        prompt.prompt.persona = { role: elements.personaRole?.value };
+
+        // Instructions and Chain of Thought from textareas
+        prompt.prompt.instructions = elements.instructions?.value.split('\n').filter(line => line.trim() !== '') || [];
+        prompt.prompt.chain_of_thought = elements.chainOfThought?.value.split('\n').filter(line => line.trim() !== '') || [];
+
+        // Examples
+        prompt.prompt.few_shot_examples = collectExamples();
         
-        const prompt = {
-            ...currentPrompt,
-            title: elements.title?.value || 'Untitled Prompt',
-            description: elements.description?.value || undefined,
-            models: selectedModels,
-            prompt: {
-                ...currentPrompt?.prompt,
-                persona: {
-                    role: elements.personaRole?.value || 'You are a helpful AI assistant.'
-                },
-                instructions: instructions,
-                ...(chainOfThought.length > 0 && { chain_of_thought: chainOfThought }),
-                ...(examples.length > 0 && { few_shot_examples: examples }),
-                ...(Object.keys(outputFormat).length > 0 && { output_format: outputFormat })
-            },
-            user_input_template: elements.userInputTemplate?.value || '{{user_query}}',
-            metadata: {
-                ...currentPrompt?.metadata,
-                last_modified: new Date().toISOString()
+        // Output format
+        const outputFormatType = elements.outputFormatType?.value;
+        const outputFormatSchema = elements.outputFormatSchema?.value;
+        if (outputFormatType) {
+            prompt.prompt.output_format = { format: outputFormatType };
+            if (outputFormatSchema) {
+                if (outputFormatType === 'json') {
+                    try {
+                        prompt.prompt.output_format.schema = JSON.parse(outputFormatSchema);
+                    } catch (e) {
+                        console.warn('Invalid JSON in output format schema');
+                        prompt.prompt.output_format.description = outputFormatSchema;
+                    }
+                } else {
+                    prompt.prompt.output_format.description = outputFormatSchema;
+                }
             }
-        };
+        } else {
+            delete prompt.prompt.output_format;
+        }
+
+        // Models
+        prompt.models = collectModels();
         
         return prompt;
     }
     
-    // Save prompt
+    // Save prompt data
     function savePrompt(isAutoSave = false) {
         const prompt = collectFormData();
         

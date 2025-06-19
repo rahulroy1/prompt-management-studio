@@ -116,20 +116,12 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
 
               <div class="form-group">
                 <label for="instructions">Instructions:</label>
-                <div id="instructions-list"></div>
-                <button id="add-instruction">+ Add Instruction</button>
+                <textarea id="instructions" placeholder="Enter each instruction on a new line..."></textarea>
               </div>
 
-              <div class="form-group advanced-section">
+              <div class="form-group">
                 <label for="chain-of-thought">Chain of Thought (Optional):</label>
-                <div id="chain-of-thought-list"></div>
-                <button id="add-chain-step">+ Add Reasoning Step</button>
-              </div>
-
-              <div class="form-group advanced-section">
-                <label for="examples">Few-Shot Examples (Optional):</label>
-                <div id="examples-list"></div>
-                <button id="add-example">+ Add Example</button>
+                <textarea id="chain-of-thought" placeholder="Enter each reasoning step on a new line..."></textarea>
               </div>
 
               <div class="form-group">
@@ -147,6 +139,12 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
                   <option value="code">Code</option>
                 </select>
                 <textarea id="output-format-schema" placeholder="Describe the expected format or provide JSON schema..." style="margin-top: 8px;"></textarea>
+              </div>
+
+              <div class="form-group advanced-section">
+                <label for="examples">Few-Shot Examples (Optional):</label>
+                <div id="examples-list"></div>
+                <button id="add-example">+ Add Example</button>
               </div>
             </div>
 

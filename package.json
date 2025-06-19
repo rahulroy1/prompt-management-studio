@@ -25,14 +25,6 @@
     "multi-model",
     "evaluation"
   ],
-  "activationEvents": [
-    "onCommand:promptStudio.evaluatePrompt",
-    "onCommand:promptStudio.openPromptIDE",
-    "onCommand:promptStudio.createPrompt",
-    "onCommand:promptStudio.configureApiKeys",
-    "onCommand:promptStudio.openTemplateLibrary",
-    "onCommand:promptStudio.comparePromptVersions"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "languages": [
