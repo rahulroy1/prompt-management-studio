@@ -1,16 +1,20 @@
-name: 'Run Tests'
+name: 'Build and Test'
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  test:
+  build_and_test:
+    name: Build, Test & Analyze
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        # SonarCloud needs a deep clone to analyze code history
+        fetch-depth: 0
       
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -21,4 +25,15 @@ jobs:
       run: npm install
       
     - name: Run tests
-      run: npm test 
+      run: npm test
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        # See notes in the PR conversation on how to set these up
+        args: >
+          -Dsonar.organization=YOUR_SONAR_ORGANIZATION
+          -Dsonar.projectKey=YOUR_SONAR_PROJECT_KEY 
