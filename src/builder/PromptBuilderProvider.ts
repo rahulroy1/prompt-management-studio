@@ -342,13 +342,38 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
   private async testPrompt(webview: vscode.Webview, promptData: PromptFile, testInput: string) {
     try {
       const prompt: PromptFile = promptData;
+      
+      // Validate the template
+      const templateValidation = this.validateTemplate(prompt.user_input_template || '');
+      if (!templateValidation.isValid) {
+        webview.postMessage({
+          type: 'testResults',
+          results: [],
+          error: `Template validation failed: ${templateValidation.message}`
+        });
+        return;
+      }
+      
       // Extract template variables from user_input_template
       const templateVariables = this.extractTemplateVariables(prompt.user_input_template || '{{user_input}}');
       
       // Create a well-typed inputs object
       const inputs: Record<string, string> = {};
-      const inputKey = templateVariables[0] || 'user_input';
-      inputs[inputKey] = testInput;
+      
+      if (templateVariables.length === 1) {
+        // Simple case: single variable gets the entire test input
+        inputs[templateVariables[0]] = testInput;
+      } else {
+        // Multiple variables: use the first one for test input, others get defaults
+        inputs[templateVariables[0]] = testInput;
+        
+        // For additional variables, try to use defaults from variable definitions
+        for (let i = 1; i < templateVariables.length; i++) {
+          const varName = templateVariables[i];
+          const varDef = prompt.variables?.find(v => v.name === varName);
+          inputs[varName] = varDef?.default || `[${varName} placeholder]`;
+        }
+      }
       
       // Create a well-typed TestCase object for the test run
       const testCaseForRun: TestCase = {
@@ -466,6 +491,22 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
     }
     
     return variables;
+  }
+
+  private validateTemplate(template: string): { isValid: boolean; message?: string } {
+    if (!template.trim()) {
+      return { isValid: false, message: 'Template cannot be empty' };
+    }
+    
+    const variables = this.extractTemplateVariables(template);
+    if (variables.length === 0) {
+      return { 
+        isValid: false, 
+        message: 'Template must contain at least one variable (e.g., {{user_input}})' 
+      };
+    }
+    
+    return { isValid: true };
   }
 
   private getNonce() {

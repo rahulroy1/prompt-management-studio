@@ -191,7 +191,24 @@ The extension is now ready for professional use in production environments.
 - Secure API key management
 - Template library with 10 golden templates
 
-### v0.1.0 - Documentation & Quality Release (Current)
+### v0.1.1 - User Input Template Enhancement (2024-01-15)
+
+### 🔧 **Improvements**
+- **Standardized User Input Template**: Changed default template from `{{user_query}}` to `{{user_input}}` for consistency
+- **Enhanced Template Validation**: Added validation to ensure templates contain at least one variable with helpful error messages
+- **Improved Multi-Variable Handling**: Better logic for templates with multiple variables, using defaults when available
+- **Better Error Messages**: More descriptive feedback when template validation fails
+
+### 🐛 **Bug Fixes**
+- Fixed inconsistent variable naming between default templates and examples
+- Improved handling of edge cases in template variable extraction
+
+### 📋 **Technical Details**
+- Updated `PromptCreator` to use consistent `{{user_input}}` template
+- Enhanced `PromptBuilderProvider` with template validation logic
+- Improved test input mapping for complex templates with multiple variables
+
+### v0.1.0 - Documentation & Quality Release (2024-01-15)
 - **Complete Documentation Overhaul**: Consolidated and organized all documentation
 - **Eliminated Content Overlaps**: Removed duplicate information across 8+ markdown files
 - **Professional Documentation Structure**: Centralized docs in `/docs` folder with clear navigation

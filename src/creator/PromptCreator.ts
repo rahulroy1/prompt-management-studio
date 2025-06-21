@@ -142,10 +142,10 @@ export class PromptCreator {
         },
         instructions: ['Please help with the following task.']
       },
-      user_input_template: '{{user_query}}',
+      user_input_template: '{{user_input}}',
       variables: [
         {
-          name: 'user_query',
+                      name: 'user_input',
           type: 'string',
           description: 'The user\'s query or request',
           required: true

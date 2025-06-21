@@ -147,4 +147,37 @@ code --uninstall-extension prompt-management-studio
 
 ---
 
-**Ready to demo!** 🚀 Start with `npm run reset-demo` to prepare your environment. 
+**Ready to demo!** 🚀 Start with `npm run reset-demo` to prepare your environment.
+
+# 📦 Extension Packages & Examples
+
+This directory contains ready-to-install VSIX packages and example prompt files for the Prompt Management Studio extension.
+
+## 🚀 Latest Release
+
+### **v0.1.1 - User Input Template Enhancement** *(Latest)*
+- **File:** `prompt-management-studio-0.1.1.vsix` (570 KB)
+- **Key Improvements:**
+  - ✅ **Standardized Templates**: Consistent `{{user_input}}` default template
+  - ✅ **Enhanced Validation**: Better error messages for invalid templates  
+  - ✅ **Multi-Variable Support**: Improved handling of complex templates
+  - ✅ **Better UX**: More intuitive template variable handling
+
+### **v0.1.0 - Documentation & Quality Release**
+- **File:** `prompt-management-studio-0.1.0.vsix` (570 KB)
+- **Focus:** Complete documentation overhaul and quality improvements
+
+## 📋 Installation
+
+### Quick Install (Recommended)
+```bash
+# Install the latest version
+code --install-extension examples/prompt-management-studio-0.1.1.vsix
+```
+
+### Manual Installation
+1. Open VS Code
+2. Go to Extensions (`Cmd+Shift+X` or `Ctrl+Shift+X`)
+3. Click the "..." menu → "Install from VSIX..."
+4. Select `examples/prompt-management-studio-0.1.1.vsix`
+5. Reload VS Code when prompted

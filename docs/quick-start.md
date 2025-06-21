@@ -41,7 +41,7 @@ code .
 ### Option C: Manual Installation
 ```bash
 # Install the latest extension
-code --install-extension examples/prompt-management-studio-0.1.0.vsix
+code --install-extension examples/prompt-management-studio-0.1.1.vsix
 
 # Or use VS Code UI: Extensions → Install from VSIX → Select the .vsix file
 ```

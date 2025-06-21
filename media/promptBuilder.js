@@ -651,7 +651,7 @@
                     },
                     instructions: ['Provide helpful and accurate responses']
                 },
-                user_input_template: '{{user_query}}',
+                user_input_template: '{{user_input}}',
                 metadata: {
                     category: '',
                     created: new Date().toISOString(),
