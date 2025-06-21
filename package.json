@@ -182,7 +182,10 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "npx mocha out/test/*.test.js --ui tdd"
+    "test": "npx mocha out/test/*.test.js --ui tdd",
+    "reset-demo": "node scripts/reset-for-demo.js",
+    "install-demo": "code --install-extension examples/prompt-management-studio-0.0.1.vsix",
+    "uninstall-demo": "code --uninstall-extension rahulroy-dev.prompt-management-studio"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.3",

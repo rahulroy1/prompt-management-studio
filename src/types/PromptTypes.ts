@@ -3,7 +3,7 @@
  */
 
 export interface PromptFile {
-  $schema?: string;
+  $schema?: string | undefined;
   title: string;
   description?: string | undefined;
   models?: ModelType[] | undefined;
