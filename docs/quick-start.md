@@ -1,5 +1,14 @@
 # 🚀 Quick Start Guide
 
+## 🔓 **Why Prompt Studio?**
+
+**Break free from vendor lock-in!** Unlike Azure AI Studio (Microsoft-only), Google AI Studio (Google-only), or Anthropic Console (Claude-only), Prompt Management Studio lets you:
+
+- **Compare all major AI providers** in one interface
+- **Own your prompts** in open JSON format  
+- **Switch providers** without losing work
+- **Work locally** in VS Code with Git integration
+
 ## What You'll Accomplish
 - ✅ Set up Prompt Studio VS Code extension
 - ✅ Create your first prompt using the Visual Builder

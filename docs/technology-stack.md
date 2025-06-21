@@ -6,6 +6,58 @@
 - **Lower Contribution Barrier**: Our core technology, TypeScript, is accessible to the widest possible community of open-source contributors.
 - **Solve the Problem First, Optimize Later**: We started with a simple, effective stack that solves the core user problem of prompt evaluation.
 
+## 🔓 **Vendor Independence by Design**
+
+### **Core Architectural Principles**
+
+Our technology stack is specifically designed to avoid vendor lock-in and maximize developer freedom:
+
+#### **1. Provider-Agnostic API Layer**
+```typescript
+interface ModelProvider {
+  name: string;
+  authenticate(credentials: ApiCredentials): Promise<boolean>;
+  callModel(request: ModelRequest): Promise<ModelResponse>;
+  getSupportedModels(): ModelType[];
+}
+```
+
+**Why This Matters:**
+- Single interface supports OpenAI, Anthropic, Google, and future providers
+- Easy to add new providers without changing core logic
+- No vendor-specific dependencies in prompt definitions
+
+#### **2. Open JSON Schema**
+```json
+{
+  "$schema": "./schemas/prompt.schema.json",
+  "title": "Universal format",
+  "models": ["gpt-4", "claude-3", "gemini-pro"],
+  "prompt": { "vendor_independent": true }
+}
+```
+
+**Benefits:**
+- Prompts work across all supported providers
+- No proprietary formats or vendor APIs required
+- Easy migration between platforms
+- Version control with Git like any code asset
+
+#### **3. Local-First Architecture**
+- **No cloud dependencies** for core functionality
+- **VS Code native** - works with existing developer tools
+- **Encrypted local storage** for API credentials
+- **Git integration** for collaboration and versioning
+
+**Contrast with Vendor Solutions:**
+| Feature | Prompt Studio | Azure AI Studio | Google AI Studio | Anthropic Console |
+|---------|---------------|-----------------|------------------|-------------------|
+| Multi-provider | ✅ All major providers | ❌ Azure/OpenAI only | ❌ Google only | ❌ Claude only |
+| Local development | ✅ VS Code native | ❌ Web-only | ❌ Web-only | ❌ Web-only |
+| Open format | ✅ JSON schema | ❌ Proprietary | ❌ Proprietary | ❌ Proprietary |
+| Git integration | ✅ Native support | ❌ Limited | ❌ Limited | ❌ None |
+| Vendor fees | ✅ Zero platform fees | ❌ Azure costs | ❌ GCP costs | ❌ Usage tracking |
+
 ## 🏗️ Implemented Architecture
 
 The product is a **pure TypeScript VS Code extension**. The architecture is designed to be simple, maintainable, and deeply integrated with the VS Code environment.

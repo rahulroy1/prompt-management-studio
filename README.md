@@ -1,9 +1,33 @@
 # Prompt Management Studio
 
+## 🔓 **Break Free from AI Vendor Lock-In**
+
+**The first open-source, AI provider-agnostic prompt management studio for developers.**
+
+While Azure AI Studio, Google AI Studio, and Anthropic Console lock you into their ecosystems, Prompt Management Studio gives you the freedom to:
+
+- ✅ **Compare models side-by-side** across OpenAI, Anthropic, Google, and future providers
+- ✅ **Own your prompts** in standard JSON format - no proprietary formats or vendor APIs
+- ✅ **Switch providers** without rewriting prompts or losing evaluation history  
+- ✅ **Work locally** in VS Code with your existing development workflow
+- ✅ **Version control** prompts with Git alongside your code
+- ✅ **No vendor fees** for prompt management - only pay for actual model usage
+
+**Stop letting AI providers control your prompt engineering workflow.** Take back control with an open, standards-based solution built for developers, by developers.
+
+---
+
 Welcome to Prompt Management Studio, a developer-native VS Code extension for professional prompt engineering. This tool provides a structured, evaluation-first workflow to help you build, test, and manage high-quality, production-ready prompts for Large Language Models.
 
-![Prompt Studio Demo](https://place-holder-for-your-demo-video.com/demo.gif)
-*(A short video demonstrating the core workflow will be placed here)*
+## 🎬 **See It In Action**
+
+**[📹 Watch the Demo Video](examples/Prompt%20Studio-demo.mp4)** - Complete walkthrough showing:
+- Creating a Python code review prompt from scratch
+- Testing across multiple AI providers (GPT-4, Claude, Gemini)  
+- Comparing responses and performance metrics
+- Exporting and sharing prompts with your team
+
+*Click the link above to download and watch the full demo recording*
 
 ## 🎯 The Goal: From Art to Engineering
 
@@ -43,6 +67,8 @@ npm install && npm run compile
 4. Save and share via Git
 
 **🎯 Get started in under 5 minutes!** See our [Quick Start Guide](docs/quick-start.md) for detailed instructions.
+
+📹 **Prefer to watch?** Check out our [Demo Video](examples/Prompt%20Studio-demo.mp4) for a complete walkthrough.
 
 ## 📚 Documentation
 

@@ -161,6 +161,36 @@ We believe that standardizing prompt engineering will accelerate AI adoption by 
 
 Just as Git transformed software development from individual craft to collaborative science, Prompt Management Studio aims to transform prompt engineering from ad-hoc experimentation to systematic knowledge building.
 
+## 🔓 **The Vendor Lock-In Problem**
+
+### **Current State: Fragmented Ecosystem**
+Today's prompt management landscape is dominated by vendor-specific solutions:
+
+- **Azure AI Studio** → Locks you into Microsoft's ecosystem
+- **Google AI Studio** → Ties you to Google's models and infrastructure  
+- **Anthropic Console** → Limited to Claude models only
+- **OpenAI Playground** → GPT-only with no export capabilities
+
+**The Problem:** Each platform uses proprietary formats, making it impossible to:
+- Compare models across providers objectively
+- Migrate prompts between platforms
+- Maintain consistent workflows across different AI providers
+- Own and control your prompt intellectual property
+
+### **Our Solution: Open Standards**
+
+Prompt Management Studio breaks this cycle by providing:
+
+1. **Provider Agnostic Architecture** - One interface for all major AI providers
+2. **Open JSON Format** - Your prompts belong to you, not the platform
+3. **Local-First Development** - Work in VS Code with your existing tools
+4. **Git Integration** - Version control prompts like any other code asset
+5. **Zero Vendor Fees** - No platform fees, only pay providers for actual usage
+
+**Philosophy:** Prompt engineering should be a portable, standards-based discipline - not locked to any single AI vendor.
+
 ---
+
+## 🎯 **Our Mission**
 
 *We do this because the future of AI depends on the quality of human-AI interaction, and that interaction deserves the same engineering rigor we apply to code, infrastructure, and design.* 
