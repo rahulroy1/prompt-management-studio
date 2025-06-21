@@ -6,9 +6,10 @@ A VS Code extension that brings engineering discipline to prompt creation. Write
 
 ## 🚀 **What It Does**
 
-### **Structured Prompt Format**
-- Standardized JSON schema for all prompts
-- Consistent structure: persona, instructions, variables, tests
+### **Structured Prompt Composition**
+- **Separate sections** for persona, instructions, examples, chain-of-thought
+- **Enforces best practices** through schema (not just free-form text)
+- **Guided prompt engineering** with distinct fields for each component
 - Built-in validation and IntelliSense support
 - Git-friendly format for version control
 
@@ -31,18 +32,33 @@ A VS Code extension that brings engineering discipline to prompt creation. Write
 - Pre-save validation prevents production issues
 - Detailed migration guidance for variable changes
 
-## 📋 **Example Prompt Structure**
+## 📋 **Structured Prompt Composition**
+
+Unlike other tools that store prompts as simple text strings, we use **structured sections** that enforce prompt engineering best practices:
 
 ```json
 {
   "title": "Code Review Assistant",
   "prompt": {
     "persona": {
-      "role": "You are a senior software engineer"
+      "role": "You are a senior software engineer",
+      "tone": "Professional and constructive"
     },
     "instructions": [
       "Review the provided code for potential issues",
-      "Focus on security, performance, and maintainability"
+      "Focus on security, performance, and maintainability",
+      "Provide specific recommendations for improvement"
+    ],
+    "few_shot_examples": [
+      {
+        "input": "function add(a, b) { return a + b }",
+        "output": "Consider adding input validation and type checking..."
+      }
+    ],
+    "chain_of_thought": [
+      "First, analyze the code structure and logic",
+      "Then, identify potential security vulnerabilities",
+      "Finally, suggest specific improvements"
     ]
   },
   "user_input_template": "Review this {{language}} code:\n\n{{code}}",
@@ -108,8 +124,9 @@ code --install-extension examples/prompt-management-studio-0.2.0.vsix
 
 ## 🔧 **Key Features**
 
-### **Visual Builder**
-- Form-based prompt creation
+### **Guided Prompt Builder**
+- **Section-by-section creation** (persona → instructions → examples → chain-of-thought)
+- **Best practice enforcement** through structured fields
 - No need to write JSON manually
 - Real-time preview and validation
 - Drag-and-drop interface for examples
@@ -145,7 +162,8 @@ Example: Changing `{{user_query}}` to `{{question}}` triggers a breaking change 
 ## 🎯 **Use Cases**
 
 ### **Individual Developers**
-- Structure ad-hoc prompts with consistent format
+- **Structure ad-hoc prompts** with guided sections (persona, instructions, examples)
+- **Learn prompt engineering** through enforced best practices
 - Test prompts across different AI providers
 - Version control prompts alongside code
 - Prevent breaking changes with schema validation
