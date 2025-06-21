@@ -2,7 +2,7 @@
 
 ## 🔓 **Break Free from AI Vendor Lock-In**
 
-**The first open-source, AI provider-agnostic prompt management studio for developers.**
+**The open-source, AI provider-agnostic prompt management studio for developers.**
 
 While Azure AI Studio, Google AI Studio, and Anthropic Console lock you into their ecosystems, Prompt Management Studio gives you the freedom to:
 
@@ -21,13 +21,15 @@ Welcome to Prompt Management Studio, a developer-native VS Code extension for pr
 
 ## 🎬 **See It In Action**
 
-**[📹 Watch the Demo Video](examples/Prompt%20Studio-demo.mp4)** - Complete walkthrough showing:
+![Prompt Studio Demo](examples/prompt-studio-demo-compact.gif)
+
+**Complete walkthrough showing:**
 - Creating a Python code review prompt from scratch
 - Testing across multiple AI providers (GPT-4, Claude, Gemini)  
 - Comparing responses and performance metrics
 - Exporting and sharing prompts with your team
 
-*Click the link above to download and watch the full demo recording*
+*[📹 Download full quality video](examples/Prompt%20Studio-demo.mp4) for offline viewing*
 
 ## 🎯 The Goal: From Art to Engineering
 
@@ -68,7 +70,7 @@ npm install && npm run compile
 
 **🎯 Get started in under 5 minutes!** See our [Quick Start Guide](docs/quick-start.md) for detailed instructions.
 
-📹 **Prefer to watch?** Check out our [Demo Video](examples/Prompt%20Studio-demo.mp4) for a complete walkthrough.
+📹 **Prefer to watch?** See the embedded demo above or [download the full video](examples/Prompt%20Studio-demo.mp4) for offline viewing.
 
 ## 📚 Documentation
 
