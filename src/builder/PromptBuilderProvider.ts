@@ -395,9 +395,9 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
       
       // Persist the new test input back to the main prompt data object
       // This ensures that if the user saves, the test input is included
-      let existingTestCase = (prompt as PromptFile).test_cases.find(tc => tc.name === 'Visual Builder Test');
-      if (existingTestCase) {
-        existingTestCase.inputs = inputs;
+              const existingTestCase = (prompt as PromptFile).test_cases.find(tc => tc.name === 'Visual Builder Test');
+        if (existingTestCase) {
+          existingTestCase.inputs = inputs;
       } else {
         (prompt as PromptFile).test_cases.push(testCaseForRun);
       }

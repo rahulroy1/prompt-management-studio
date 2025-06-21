@@ -4,7 +4,8 @@ This folder contains everything needed for demonstrations and testing of the Pro
 
 ## 📦 Contents
 
-- **`prompt-management-studio-0.0.1.vsix`** - Packaged extension ready for installation
+- **`prompt-management-studio-0.1.0.vsix`** - Latest packaged extension ready for installation
+- **`prompt-management-studio-0.0.1.vsix`** - Previous version (legacy)
 - **`code-review.prompt.json`** - Example prompt template for code review assistance
 - **Demo reset scripts** - Located in `../scripts/` for preparing clean demo environments
 
@@ -21,8 +22,8 @@ npm run install-demo
 
 ### Option 2: Manual installation
 ```bash
-# Install the extension
-code --install-extension examples/prompt-management-studio-0.0.1.vsix
+# Install the latest extension
+code --install-extension examples/prompt-management-studio-0.1.0.vsix
 
 # Or use VS Code UI: Extensions → Install from VSIX → Select the .vsix file
 ```

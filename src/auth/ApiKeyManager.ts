@@ -1,19 +1,54 @@
 import * as vscode from 'vscode';
 import { ModelCredentials, ModelType } from '../types/PromptTypes';
 
+/**
+ * Interface for provider selection in the configuration UI
+ */
 interface ProviderChoice {
   label: string;
   description: string;
   provider: string;
 }
 
+/**
+ * Manages secure storage and retrieval of AI model API keys using VS Code's SecretStorage.
+ * 
+ * This class provides a secure way to store API credentials for different AI providers
+ * (OpenAI, Anthropic, Google) and ensures proper validation and access control.
+ * 
+ * @example
+ * ```typescript
+ * const apiKeyManager = new ApiKeyManager(context);
+ * await apiKeyManager.configureApiKeys();
+ * const credentials = await apiKeyManager.getCredentials();
+ * ```
+ */
 export class ApiKeyManager {
   private readonly secretStorage: vscode.SecretStorage;
 
+  /**
+   * Creates a new ApiKeyManager instance
+   * @param context - VS Code extension context for accessing SecretStorage
+   */
   constructor(private context: vscode.ExtensionContext) {
     this.secretStorage = context.secrets;
   }
 
+  /**
+   * Opens a user interface for configuring API keys for different AI providers.
+   * 
+   * Presents a quick pick menu allowing users to:
+   * - Configure individual provider API keys (OpenAI, Anthropic, Google)
+   * - View currently configured keys
+   * - Remove all stored keys
+   * 
+   * @throws {Error} When API key validation fails
+   * @example
+   * ```typescript
+   * const apiKeyManager = new ApiKeyManager(context);
+   * await apiKeyManager.configureApiKeys();
+   * ```
+   */
   async configureApiKeys(): Promise<void> {
     const choice = await vscode.window.showQuickPick([
       { label: 'OpenAI', description: 'Configure OpenAI API key', provider: 'openai' },
@@ -146,6 +181,18 @@ export class ApiKeyManager {
     }
   }
 
+  /**
+   * Retrieves all stored API credentials from secure storage.
+   * 
+   * @returns Promise resolving to ModelCredentials object with available API keys
+   * @example
+   * ```typescript
+   * const credentials = await apiKeyManager.getCredentials();
+   * if (credentials.openai_api_key) {
+   *   // OpenAI key is available
+   * }
+   * ```
+   */
   async getCredentials(): Promise<ModelCredentials> {
     const [openaiKey, anthropicKey, googleKey] = await Promise.all([
       this.secretStorage.get('promptStudio.openai_api_key'),
@@ -160,6 +207,17 @@ export class ApiKeyManager {
     };
   }
 
+  /**
+   * Checks if API credentials are available for a specific AI model.
+   * 
+   * @param model - The AI model to check credentials for
+   * @returns Promise resolving to true if credentials are available, false otherwise
+   * @example
+   * ```typescript
+   * const hasOpenAI = await apiKeyManager.hasCredentialsForModel('gpt-4-turbo');
+   * const hasClaude = await apiKeyManager.hasCredentialsForModel('claude-3-sonnet');
+   * ```
+   */
   async hasCredentialsForModel(model: ModelType): Promise<boolean> {
     const credentials = await this.getCredentials();
     
@@ -174,6 +232,24 @@ export class ApiKeyManager {
     return false;
   }
 
+  /**
+   * Ensures API credentials are available for all specified models.
+   * 
+   * If any credentials are missing, prompts the user to configure them.
+   * This is typically called before running evaluations to ensure all required
+   * API keys are available.
+   * 
+   * @param models - Array of AI models that need credentials
+   * @returns Promise resolving to true if all credentials are available, false if user cancelled
+   * @example
+   * ```typescript
+   * const models: ModelType[] = ['gpt-4-turbo', 'claude-3-sonnet'];
+   * const ready = await apiKeyManager.ensureCredentialsForModels(models);
+   * if (ready) {
+   *   // Proceed with evaluation
+   * }
+   * ```
+   */
   async ensureCredentialsForModels(models: ModelType[]): Promise<boolean> {
     const missingCredentials: string[] = [];
     

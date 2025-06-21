@@ -5,15 +5,57 @@ import { PromptFile, ModelType, EvaluationResult, EvaluationSession, TestCase } 
 import { PromptCompiler } from '../compiler/PromptCompiler';
 import { ModelClient } from '../models/ModelClient';
 
+/**
+ * Core engine for evaluating prompts against multiple AI models.
+ * 
+ * The PromptEvaluator orchestrates the entire evaluation workflow:
+ * - Loading and validating prompt files
+ * - User interaction for test case selection
+ * - Credential verification across providers
+ * - Parallel evaluation across multiple models
+ * - Results aggregation and presentation
+ * 
+ * @example
+ * ```typescript
+ * const evaluator = new PromptEvaluator(apiKeyManager);
+ * await evaluator.evaluatePrompt(vscode.Uri.file('/path/to/prompt.json'));
+ * ```
+ */
 export class PromptEvaluator {
   private compiler: PromptCompiler;
   private modelClient: ModelClient;
 
+  /**
+   * Creates a new PromptEvaluator instance
+   * @param apiKeyManager - Manager for secure API credential storage and retrieval
+   */
   constructor(private apiKeyManager: ApiKeyManager) {
     this.compiler = new PromptCompiler();
     this.modelClient = new ModelClient(apiKeyManager);
   }
 
+  /**
+   * Evaluates a prompt file against configured AI models.
+   * 
+   * This is the main entry point for prompt evaluation. The method:
+   * 1. Loads and validates the prompt file
+   * 2. Prompts user to select a test case (if multiple exist)
+   * 3. Verifies API credentials for all required models
+   * 4. Runs evaluation in parallel across all models
+   * 5. Displays results in a side-by-side comparison view
+   * 
+   * @param uri - File URI of the .prompt.json file to evaluate
+   * @throws {Error} When prompt file is invalid or evaluation fails
+   * 
+   * @example
+   * ```typescript
+   * // Evaluate from command
+   * const uri = vscode.Uri.file('/path/to/my-prompt.prompt.json');
+   * await evaluator.evaluatePrompt(uri);
+   * 
+   * // Results will be displayed in a new document
+   * ```
+   */
   async evaluatePrompt(uri: vscode.Uri): Promise<void> {
     try {
       // Load and parse the prompt file

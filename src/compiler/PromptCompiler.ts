@@ -1,6 +1,51 @@
 import { PromptFile, CompiledPrompt } from '../types/PromptTypes';
 
+/**
+ * Compiles structured prompts into provider-specific API call formats.
+ * 
+ * The PromptCompiler takes a structured prompt definition and converts it into
+ * the message format expected by AI model APIs. It handles variable substitution,
+ * system message construction, few-shot examples, and provider-specific formatting.
+ * 
+ * @example
+ * ```typescript
+ * const compiler = new PromptCompiler();
+ * const compiled = compiler.compile(promptFile, { user_input: 'Hello world' });
+ * // Returns CompiledPrompt ready for API calls
+ * ```
+ */
 export class PromptCompiler {
+  /**
+   * Compiles a structured prompt into a format suitable for AI model APIs.
+   * 
+   * This method performs the following operations:
+   * 1. Substitutes variables in the user input template
+   * 2. Builds a comprehensive system message from prompt components
+   * 3. Adds few-shot examples if provided
+   * 4. Formats everything into the message array expected by APIs
+   * 5. Sets appropriate parameters based on output requirements
+   * 
+   * @param promptFile - The structured prompt definition to compile
+   * @param variables - Key-value pairs for variable substitution
+   * @returns CompiledPrompt ready for API calls
+   * @throws {Error} When variable substitution fails or prompt structure is invalid
+   * 
+   * @example
+   * ```typescript
+   * const promptFile = {
+   *   title: "Code Review",
+   *   prompt: {
+   *     persona: { role: "Senior Developer" },
+   *     instructions: ["Review the code", "Provide feedback"]
+   *   },
+   *   user_input_template: "{{code_to_review}}"
+   * };
+   * 
+   * const compiled = compiler.compile(promptFile, { 
+   *   code_to_review: "function add(a, b) { return a + b; }" 
+   * });
+   * ```
+   */
   compile(promptFile: PromptFile, variables: Record<string, any>): CompiledPrompt {
     // Replace variables in the user input template
     const userInput = this.replaceVariables(promptFile.user_input_template, variables);

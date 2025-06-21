@@ -1,4 +1,4 @@
-# Prompt Management Studio - Comprehensive Fix Release
+# Release Notes
 
 ## 🚀 Major Release: Complete Feature Implementation
 
@@ -142,7 +142,7 @@ This release represents a **complete overhaul** of the Prompt Builder with profe
 
 ```bash
 # Install the latest version
-code --install-extension examples/prompt-management-studio-0.0.1.vsix --force
+code --install-extension examples/prompt-management-studio-0.1.0.vsix --force
 
 # Or use the demo installer
 npm run install-demo
@@ -182,6 +182,27 @@ The extension is now ready for professional use in production environments.
 
 ---
 
+## 🔄 Version History
+
+### v0.0.1 - Initial Release
+- Core VS Code extension functionality
+- Basic prompt creation and editing
+- Multi-model evaluation engine
+- Secure API key management
+- Template library with 10 golden templates
+
+### v0.1.0 - Documentation & Quality Release (Current)
+- **Complete Documentation Overhaul**: Consolidated and organized all documentation
+- **Eliminated Content Overlaps**: Removed duplicate information across 8+ markdown files
+- **Professional Documentation Structure**: Centralized docs in `/docs` folder with clear navigation
+- **Enhanced User Experience**: Streamlined README with direct links to comprehensive guides
+- **Quality Improvements**: Updated package structure and improved maintainability
+- **Consolidated Guides**: Created comprehensive quick-start, user guide, and developer documentation
+
+---
+
 ## 🙏 Acknowledgments
 
-This comprehensive fix addresses all previously identified issues and implements the complete vision for the Prompt Management Studio. The extension now provides a professional, feature-complete experience for prompt engineering workflows. 
+This comprehensive release addresses all previously identified issues and implements the complete vision for the Prompt Management Studio. The extension now provides a professional, feature-complete experience for prompt engineering workflows.
+
+Special thanks to the community for feedback and testing that helped identify and prioritize the improvements in this release. 
