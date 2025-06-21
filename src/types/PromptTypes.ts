@@ -3,15 +3,17 @@
  */
 
 export interface PromptFile {
-  $schema?: string | undefined;
+  $schema?: string;
   title: string;
-  description?: string | undefined;
-  models?: ModelType[] | undefined;
+  description?: string;
   prompt: PromptStructure;
   user_input_template: string;
-  variables?: Variable[] | undefined;
-  test_cases: TestCase[];
-  metadata?: PromptMetadata | undefined;
+  variables?: VariableDefinition[];
+  test_cases?: TestCase[];
+  models?: ModelType[];
+  metadata?: PromptMetadata;
+  schema_version?: string;
+  variable_schema?: VariableSchema;
 }
 
 export interface PromptStructure {
@@ -47,6 +49,14 @@ export interface Variable {
   description?: string | undefined;
   required?: boolean | undefined;
   default?: any;
+}
+
+export interface VariableDefinition {
+  name: string;
+  type: string;
+  required: boolean;
+  description?: string;
+  default?: string;
 }
 
 export interface TestCase {
@@ -142,4 +152,29 @@ export interface CompiledPrompt {
     content: string;
   }>;
   parameters?: Record<string, any> | undefined;
+}
+
+export interface VariableSchema {
+  version: string;
+  variables: VariableDefinition[];
+  created_at: string;
+  checksum: string;
+  breaking_changes?: BreakingChange[];
+}
+
+export interface BreakingChange {
+  type: 'variable_added' | 'variable_removed' | 'variable_renamed' | 'type_changed' | 'required_changed';
+  variable_name: string;
+  old_value?: any;
+  new_value?: any;
+  impact: 'breaking' | 'warning' | 'info';
+  migration_note?: string;
+}
+
+export interface SchemaValidationResult {
+  is_valid: boolean;
+  breaking_changes: BreakingChange[];
+  warnings: string[];
+  migration_required: boolean;
+  compatibility_score: number; // 0-100
 } 

@@ -2,7 +2,7 @@
   "name": "prompt-management-studio",
   "displayName": "Prompt Management Studio",
   "description": "A developer-native IDE for prompt engineering, evaluation, and governance.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "rahulroy-dev",
   "repository": {
     "type": "git",
@@ -184,7 +184,7 @@
     "lint": "eslint src --ext ts",
     "test": "npx mocha out/test/*.test.js --ui tdd",
     "reset-demo": "node scripts/reset-for-demo.js",
-    "install-demo": "code --install-extension examples/prompt-management-studio-0.1.1.vsix",
+    "install-demo": "code --install-extension examples/prompt-management-studio-0.2.0.vsix",
     "uninstall-demo": "code --uninstall-extension rahulroy-dev.prompt-management-studio"
   },
   "devDependencies": {

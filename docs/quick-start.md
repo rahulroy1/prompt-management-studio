@@ -26,33 +26,28 @@
 
 ---
 
-## 🎯 Step 1: Install & Activate (2 minutes)
+## 🎯 **Installation**
 
-### Option A: Development Mode
+### **Option 1: Install Pre-built Package (Recommended)**
+
+Download and install the latest version with schema validation:
+
 ```bash
-# Clone and set up
-git clone https://github.com/rahulroy1/prompt-management-studio.git
-cd prompt-management-studio
-npm install
-npm run compile
-
-# Launch in VS Code
-code .
-# Press F5 to run extension
+# Install the latest version (0.2.0) with schema validation
+code --install-extension examples/prompt-management-studio-0.2.0.vsix
 ```
 
-### Option B: VS Code Marketplace *(Coming Soon)*
-1. Open VS Code
-2. Go to Extensions (`Cmd+Shift+X` or `Ctrl+Shift+X`)
-3. Search "Prompt Studio"
-4. Install and reload
+**What's New in v0.2.0:**
+- 🔒 **Prompt Schema Validation** - Automatic breaking change detection
+- 📊 Compatibility scoring and migration guidance  
+- 🚨 Pre-save validation to prevent production breaks
+- 📝 Detailed schema change reports
 
-### Option C: Manual Installation
+### **Option 2: Install Previous Version**
+
 ```bash
-# Install the latest extension
+# Install previous stable version (0.1.1)
 code --install-extension examples/prompt-management-studio-0.1.1.vsix
-
-# Or use VS Code UI: Extensions → Install from VSIX → Select the .vsix file
 ```
 
 ---

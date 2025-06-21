@@ -216,6 +216,49 @@ The extension is now ready for professional use in production environments.
 - **Quality Improvements**: Updated package structure and improved maintainability
 - **Consolidated Guides**: Created comprehensive quick-start, user guide, and developer documentation
 
+### Version 0.2.0 - Production Safety Through Schema Validation
+
+### 🔒 **NEW: Prompt Schema Validation**
+
+**Major Feature**: Automatic variable schema tracking and breaking change detection to prevent production issues.
+
+#### **What's New:**
+- **🚨 Automatic Breaking Change Detection**: Detects when variable changes could break existing code
+- **📊 Compatibility Scoring**: 0-100% score showing impact of changes
+- **🔄 Migration Guidance**: Specific recommendations for handling breaking changes
+- **📝 Detailed Reports**: Comprehensive markdown reports of schema changes
+- **⚡ Real-time Validation**: Pre-save validation prevents accidental breaks
+- **🔍 Schema Metadata**: Automatic tracking of variable schemas with checksums
+
+#### **How It Works:**
+- Scans `{{variable}}` patterns in user input templates
+- Merges with declared variable definitions
+- Generates unique schema fingerprints
+- Compares schemas across prompt versions
+- Shows dialog with breaking changes before save
+- Provides detailed migration reports
+
+#### **Breaking Change Types Detected:**
+- ✅ Variable removed (breaking if required, warning if optional)
+- ✅ Variable added (breaking if required, info if optional)  
+- ✅ Variable type changed (warning)
+- ✅ Required status changed (breaking if becomes required)
+
+#### **Example Workflow:**
+1. Change variable from `{{user_query}}` to `{{question}}`
+2. Schema validator detects breaking change
+3. Shows compatibility score and impact
+4. Provides migration guidance
+5. Generates detailed report for team review
+
+#### **Files Added:**
+- `src/validator/SchemaValidator.ts` - Core validation engine
+- `src/test/SchemaValidator.test.ts` - Comprehensive test suite
+- `docs/schema-validation.md` - Complete documentation
+- `examples/schema-validation-demo.prompt.json` - Working example
+
+This feature transforms prompt engineering from a risky manual process into a safe, version-controlled workflow that scales with teams and protects production systems.
+
 ---
 
 ## 🙏 Acknowledgments

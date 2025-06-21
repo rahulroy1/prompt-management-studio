@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
-import { PromptFile, ModelType, TestCase, EvaluationResult } from '../types/PromptTypes';
+import { PromptFile, ModelType, TestCase, EvaluationResult, SchemaValidationResult } from '../types/PromptTypes';
 import { ApiKeyManager } from '../auth/ApiKeyManager';
+import { SchemaValidator } from '../validator/SchemaValidator';
 
 export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
   private _isSaving = false;
+  private _schemaValidator: SchemaValidator;
 
   public static register(_context: vscode.ExtensionContext, _apiKeyManager: ApiKeyManager): vscode.Disposable {
     const provider = new PromptBuilderProvider(_context, _apiKeyManager);
@@ -23,7 +25,9 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
   constructor(
     private readonly _context: vscode.ExtensionContext,
     private readonly _apiKeyManager: ApiKeyManager
-  ) {}
+  ) {
+    this._schemaValidator = new SchemaValidator();
+  }
 
   public async resolveCustomTextEditor(
     document: vscode.TextDocument,
@@ -53,6 +57,9 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
           break;
         case 'checkApiKey':
           await this.checkApiKey(message.family);
+          break;
+        case 'validateSchema':
+          await this.validatePromptSchema(webviewPanel.webview, message.prompt, message.previousPrompt);
           break;
       }
     }
@@ -269,6 +276,34 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
   private async savePrompt(document: vscode.TextDocument, promptData: PromptFile) {
     this._isSaving = true;
     try {
+      // Load existing prompt for schema comparison
+      let existingPrompt: PromptFile | null = null;
+      try {
+        const existingContent = document.getText();
+        if (existingContent.trim()) {
+          existingPrompt = JSON.parse(existingContent);
+        }
+      } catch (e) {
+        // Ignore parsing errors for new files
+      }
+
+      // Validate schema changes
+      if (existingPrompt) {
+        const schemaValidation = this._schemaValidator.validateSchemaChange(existingPrompt, promptData);
+        if (!schemaValidation.is_valid) {
+          const response = await this.showSchemaValidationDialog(schemaValidation);
+          if (response !== 'proceed') {
+            return; // User cancelled save
+          }
+        }
+      }
+
+      // Update prompt with schema metadata
+      const updatedPrompt = this._schemaValidator.updatePromptSchema(
+        promptData, 
+        existingPrompt?.variable_schema
+      );
+
       const edit = new vscode.WorkspaceEdit();
       const fullRange = new vscode.Range(
         document.positionAt(0),
@@ -276,12 +311,13 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
       );
       
       // First, apply the content changes to the document
-      edit.replace(document.uri, fullRange, JSON.stringify(promptData, null, 2));
+      edit.replace(document.uri, fullRange, JSON.stringify(updatedPrompt, null, 2));
       const success = await vscode.workspace.applyEdit(edit);
 
       // If the edit was successful, then save the document to disk
       if (success) {
         await document.save();
+        vscode.window.showInformationMessage('Prompt saved successfully!');
       } else {
         vscode.window.showErrorMessage('Failed to update the prompt file content.');
       }
@@ -420,11 +456,15 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
       
       // Persist the new test input back to the main prompt data object
       // This ensures that if the user saves, the test input is included
-              const existingTestCase = (prompt as PromptFile).test_cases.find(tc => tc.name === 'Visual Builder Test');
+      if (prompt.test_cases) {
+        const existingTestCase = prompt.test_cases.find(tc => tc.name === 'Visual Builder Test');
         if (existingTestCase) {
           existingTestCase.inputs = inputs;
+        } else {
+          prompt.test_cases.push(testCaseForRun);
+        }
       } else {
-        (prompt as PromptFile).test_cases.push(testCaseForRun);
+        prompt.test_cases = [testCaseForRun];
       }
 
       // Send results back to webview
@@ -529,5 +569,150 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
     if (models) {
         await this._apiKeyManager.ensureCredentialsForModels(models);
     }
+  }
+
+  /**
+   * Validates prompt schema and sends results to webview
+   */
+  private async validatePromptSchema(webview: vscode.Webview, currentPrompt: PromptFile, previousPrompt?: PromptFile) {
+    try {
+      let validationResult: SchemaValidationResult;
+      
+      if (previousPrompt) {
+        // Compare with previous version
+        validationResult = this._schemaValidator.validateSchemaChange(previousPrompt, currentPrompt);
+      } else {
+        // Validate against current schema
+        validationResult = this._schemaValidator.validatePromptAgainstSchema(currentPrompt);
+      }
+
+      webview.postMessage({
+        type: 'schemaValidationResult',
+        result: validationResult
+      });
+    } catch (error) {
+      webview.postMessage({
+        type: 'schemaValidationResult',
+        result: {
+          is_valid: false,
+          breaking_changes: [],
+          warnings: [`Schema validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`],
+          migration_required: false,
+          compatibility_score: 0
+        }
+      });
+    }
+  }
+
+  /**
+   * Shows dialog for schema validation issues
+   */
+  private async showSchemaValidationDialog(validation: SchemaValidationResult): Promise<string> {
+    const breakingCount = validation.breaking_changes.filter(c => c.impact === 'breaking').length;
+    const warningCount = validation.breaking_changes.filter(c => c.impact === 'warning').length;
+    
+    let message = `Schema validation detected ${breakingCount} breaking change(s) and ${warningCount} warning(s):\n\n`;
+    
+    // Show top 5 changes
+    const topChanges = validation.breaking_changes.slice(0, 5);
+    for (const change of topChanges) {
+      const icon = change.impact === 'breaking' ? '🚨' : change.impact === 'warning' ? '⚠️' : 'ℹ️';
+      message += `${icon} ${change.migration_note}\n`;
+    }
+    
+    if (validation.breaking_changes.length > 5) {
+      message += `\n... and ${validation.breaking_changes.length - 5} more changes`;
+    }
+    
+    message += `\nCompatibility Score: ${validation.compatibility_score}%`;
+    message += '\n\nProceeding may break existing code that uses this prompt.';
+
+    const options = ['Review Changes', 'Proceed Anyway', 'Cancel'];
+    const choice = await vscode.window.showWarningMessage(message, { modal: true }, ...options);
+    
+    switch (choice) {
+      case 'Review Changes':
+        await this.showDetailedSchemaChanges(validation);
+        return 'review';
+      case 'Proceed Anyway':
+        return 'proceed';
+      default:
+        return 'cancel';
+    }
+  }
+
+  /**
+   * Shows detailed schema changes in a new document
+   */
+  private async showDetailedSchemaChanges(validation: SchemaValidationResult) {
+    const content = this.generateSchemaChangeReport(validation);
+    const doc = await vscode.workspace.openTextDocument({
+      content,
+      language: 'markdown'
+    });
+    await vscode.window.showTextDocument(doc);
+  }
+
+  /**
+   * Generates a detailed schema change report
+   */
+  private generateSchemaChangeReport(validation: SchemaValidationResult): string {
+    let report = '# Prompt Schema Validation Report\n\n';
+    
+    report += `**Compatibility Score:** ${validation.compatibility_score}%\n`;
+    report += `**Migration Required:** ${validation.migration_required ? 'Yes' : 'No'}\n\n`;
+    
+    if (validation.breaking_changes.length > 0) {
+      report += '## Breaking Changes\n\n';
+      
+      const breakingChanges = validation.breaking_changes.filter(c => c.impact === 'breaking');
+      const warnings = validation.breaking_changes.filter(c => c.impact === 'warning');
+      const info = validation.breaking_changes.filter(c => c.impact === 'info');
+      
+      if (breakingChanges.length > 0) {
+        report += '### 🚨 Breaking Changes (Immediate Action Required)\n\n';
+        for (const change of breakingChanges) {
+          report += `- **${change.variable_name}** (${change.type})\n`;
+          report += `  - ${change.migration_note}\n`;
+          if (change.old_value !== undefined) {
+            report += `  - Old: \`${JSON.stringify(change.old_value)}\`\n`;
+          }
+          if (change.new_value !== undefined) {
+            report += `  - New: \`${JSON.stringify(change.new_value)}\`\n`;
+          }
+          report += '\n';
+        }
+      }
+      
+      if (warnings.length > 0) {
+        report += '### ⚠️ Warnings (Review Recommended)\n\n';
+        for (const change of warnings) {
+          report += `- **${change.variable_name}** (${change.type})\n`;
+          report += `  - ${change.migration_note}\n`;
+          report += '\n';
+        }
+      }
+      
+      if (info.length > 0) {
+        report += '### ℹ️ Information (Non-Breaking)\n\n';
+        for (const change of info) {
+          report += `- **${change.variable_name}** (${change.type})\n`;
+          report += `  - ${change.migration_note}\n`;
+          report += '\n';
+        }
+      }
+    }
+    
+    report += '## Recommended Actions\n\n';
+    if (validation.migration_required) {
+      report += '1. **Update your code** to handle the breaking changes listed above\n';
+      report += '2. **Test thoroughly** with the new variable schema\n';
+      report += '3. **Update documentation** to reflect the changes\n';
+    } else {
+      report += '1. **Review warnings** to ensure they don\'t impact your use case\n';
+      report += '2. **Consider updating** variable usage for optimal compatibility\n';
+    }
+    
+    return report;
   }
 } 

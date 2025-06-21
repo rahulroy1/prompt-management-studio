@@ -181,3 +181,119 @@ code --install-extension examples/prompt-management-studio-0.1.1.vsix
 3. Click the "..." menu → "Install from VSIX..."
 4. Select `examples/prompt-management-studio-0.1.1.vsix`
 5. Reload VS Code when prompted
+```
+
+# Examples and Packages
+
+This directory contains example prompt files and packaged versions of the Prompt Management Studio extension.
+
+## 📦 **Extension Packages**
+
+### **Latest: Version 0.2.0 - Schema Validation**
+- **File**: `prompt-management-studio-0.2.0.vsix` (8.4 MB)
+- **Features**: 
+  - 🔒 **NEW: Prompt Schema Validation** - Automatic breaking change detection
+  - 📊 Compatibility scoring and migration guidance
+  - 🚨 Pre-save validation to prevent production breaks
+  - 📝 Detailed schema change reports
+  - All previous features included
+
+### **Version 0.1.1 - Template Improvements**
+- **File**: `prompt-management-studio-0.1.1.vsix` (570 KB)
+- **Features**: Enhanced user input templates, better validation, multi-variable support
+
+## 🚀 **Installation**
+
+### **Install Latest Version (Recommended)**
+```bash
+code --install-extension examples/prompt-management-studio-0.2.0.vsix
+```
+
+### **Install Previous Version**
+```bash
+code --install-extension examples/prompt-management-studio-0.1.1.vsix
+```
+
+### **Uninstall**
+```bash
+code --uninstall-extension rahulroy-dev.prompt-management-studio
+```
+
+## 📁 **Example Files**
+
+### **Schema Validation Demo**
+- **File**: `schema-validation-demo.prompt.json`
+- **Purpose**: Demonstrates the new schema validation feature
+- **Features**: Complete variable schema tracking, breaking change history
+
+### **Code Review Assistant**
+- **File**: `code-review-assistant.prompt.json`
+- **Purpose**: Comprehensive code review prompt for security and performance analysis
+- **Models**: GPT-4, Claude 3.5 Sonnet
+
+### **Content Generation**
+- **File**: `content-generator.prompt.json`
+- **Purpose**: Multi-format content creation with structured output
+- **Features**: Few-shot examples, output format specification
+
+### **Data Analysis Helper**
+- **File**: `data-analysis-helper.prompt.json`
+- **Purpose**: Statistical analysis and insight generation
+- **Features**: Chain-of-thought reasoning, constraint handling
+
+### **Customer Service Bot**
+- **File**: `customer-service-bot.prompt.json`
+- **Purpose**: Professional customer support responses
+- **Features**: Tone specification, escalation handling
+
+### **Documentation Writer**
+- **File**: `documentation-writer.prompt.json`
+- **Purpose**: Technical documentation generation
+- **Features**: Structured output, multiple formats
+
+### **Translation Assistant**
+- **File**: `translation-assistant.prompt.json`
+- **Purpose**: Multi-language translation with context preservation
+- **Features**: Cultural adaptation, formality levels
+
+## 🎯 **Quick Start**
+
+1. **Install the extension** using one of the commands above
+2. **Open any `.prompt.json` file** from this directory
+3. **Try the Visual Builder** - VS Code will automatically open the prompt builder interface
+4. **Test with different models** - Use the "Test Now" feature to compare responses
+5. **Experiment with schema validation** - Try modifying variables in the schema validation demo
+
+## 🔧 **Development**
+
+If you're contributing to the project:
+
+```bash
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build new package
+npx vsce package
+
+# Install your build
+code --install-extension prompt-management-studio-X.X.X.vsix
+```
+
+## 📊 **Version History**
+
+| Version | Size | Key Features | Release Date |
+|---------|------|--------------|--------------|
+| **0.2.0** | 8.4 MB | **Schema Validation**, Breaking change detection | June 2024 |
+| 0.1.1 | 570 KB | Template improvements, Better validation | June 2024 |
+| 0.1.0 | - | Initial release, Multi-model support | June 2024 |
+
+## 💡 **Tips**
+
+- **Schema Validation**: Try modifying variables in the demo file to see breaking change detection in action
+- **Multi-Model Testing**: Use the side-by-side comparison to evaluate different AI models
+- **Template Variables**: Use `{{variable_name}}` syntax for dynamic content
+- **Version Control**: All `.prompt.json` files work perfectly with Git
+- **Team Collaboration**: Share prompt files across your team for consistent AI interactions
