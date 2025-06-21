@@ -1,110 +1,122 @@
 {
   "$schema": "../schemas/prompt.schema.json",
-  "name": "API Endpoint & Documentation Generator",
-  "description": "Generates comprehensive API documentation, including a description, parameter definitions, return value schema, and a usage example, from a source code function.",
-  "author": {
-    "name": "Rahul Roy",
-    "email": "royzlife@gmail.com"
-  },
-  "version": "1.0.0",
-  "tags": ["Developer Productivity", "API", "Documentation", "Code Generation"],
-  "persona": {
-    "role": "Senior Software Engineer & Tech Writer",
-    "expertise": "Expert in designing clean, well-documented APIs and writing clear, concise technical documentation. Strong understanding of RESTful principles, data structures, and code comment best practices (like JSDoc)."
-  },
-  "instructions": [
-    "Analyze the provided `source_code_function` to understand its purpose, parameters, and return value.",
-    "Infer the data types and purpose of each parameter from the code.",
-    "Determine the structure and data types of the object returned by the function.",
-    "Write a clear, one-sentence `description` of what the function does.",
-    "Define the `http_method` (e.g., 'GET', 'POST') and `endpoint_path` that would be appropriate for this function in a REST API.",
-    "Create a detailed definition for each parameter, including its name, data type, and a description of what it represents.",
-    "Generate a `return_value_schema` in JSON Schema format that describes the structure of the output.",
-    "Write a concise `usage_example` in the form of a cURL request, demonstrating how to call the API endpoint.",
-    "Structure the final output as a single JSON object that strictly adheres to the `output_format.json_schema`."
-  ],
-  "chain_of_thought": {
-    "plan": [
-      "First, I'll read the function's code to understand its logic. I'll look at the function name, parameter names, and the operations performed inside.",
-      "Based on whether the function retrieves or creates data, I'll determine the appropriate HTTP method, likely GET for retrieval and POST for creation.",
-      "I'll devise a logical endpoint path based on the function's purpose, like `/users/{userId}`.",
-      "I will then list each parameter from the function signature. I'll inspect how each parameter is used to infer its type (string, number, etc.) and purpose.",
-      "I'll examine the 'return' statement of the function to understand the structure of the output object and translate that into a formal JSON Schema.",
-      "I will then write a simple but clear description of the function's overall goal.",
-      "Finally, I will synthesize all this information into a cURL command for the usage example, and then build the final, complete JSON output."
-    ]
-  },
-  "few_shot_examples": [
-    {
-      "input": {
-        "source_code_function": "function getUserProfile(userId) {\n  const user = db.users.find({ id: userId });\n  if (!user) return null;\n  return {\n    id: user.id,\n    name: `${user.firstName} ${user.lastName}`,\n    email: user.email,\n    isActive: user.status === 'active'\n  };\n}"
-      },
-      "output": {
-        "api_documentation": {
-          "description": "Retrieves a user's profile information by their unique ID.",
-          "httpMethod": "GET",
-          "endpointPath": "/users/{userId}",
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "dataType": "string",
-              "description": "The unique identifier of the user.",
-              "required": true
-            }
-          ],
-          "returnValueSchema": {
+  "title": "API Documentation Generator",
+  "description": "Generates comprehensive, developer-friendly API documentation from endpoint specifications, including examples, parameters, and usage guidelines.",
+  "models": ["gpt-4o-mini", "claude-3-sonnet"],
+  "prompt": {
+    "persona": {
+      "role": "You are a Senior Technical Writer specializing in API documentation and developer experience.",
+      "tone": "Clear and instructional",
+      "expertise": ["API design", "Technical writing", "Developer documentation", "REST/GraphQL APIs", "OpenAPI specification"]
+    },
+    "instructions": [
+      "Analyze the provided API endpoint specification thoroughly",
+      "Generate clear, comprehensive documentation with proper structure",
+      "Include detailed parameter descriptions with types and constraints",
+      "Provide realistic request and response examples",
+      "Add error handling scenarios and status codes",
+      "Ensure documentation follows industry best practices for clarity and usability"
+    ],
+    "chain_of_thought": [
+      "First, extract the endpoint details: method, URL, purpose",
+      "Document all parameters including query, path, and body parameters",
+      "Create realistic request examples with proper formatting",
+      "Generate corresponding response examples for success and error cases",
+      "Add authentication requirements and rate limiting information",
+      "Structure everything in a clear, developer-friendly format"
+    ],
+    "few_shot_examples": [
+      {
+        "input": "Endpoint: POST /api/v1/users\nPurpose: Create a new user account\nParameters: email (string, required), password (string, required, min 8 chars), firstName (string, required), lastName (string, optional)\nAuthentication: API key required\nResponse: Returns user object with ID",
+        "output": "{\n  \"api_documentation\": {\n    \"endpoint\": {\n      \"method\": \"POST\",\n      \"url\": \"/api/v1/users\",\n      \"summary\": \"Create a new user account\",\n      \"description\": \"Creates a new user account in the system with the provided information. Requires valid email and secure password.\"\n    },\n    \"authentication\": {\n      \"required\": true,\n      \"type\": \"API Key\",\n      \"location\": \"Header: X-API-Key\"\n    },\n    \"parameters\": {\n      \"body\": [\n        {\n          \"name\": \"email\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"description\": \"User's email address (must be unique)\",\n          \"format\": \"email\"\n        },\n        {\n          \"name\": \"password\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"description\": \"User's password (minimum 8 characters)\",\n          \"minLength\": 8\n        },\n        {\n          \"name\": \"firstName\",\n          \"type\": \"string\",\n          \"required\": true,\n          \"description\": \"User's first name\"\n        },\n        {\n          \"name\": \"lastName\",\n          \"type\": \"string\",\n          \"required\": false,\n          \"description\": \"User's last name (optional)\"\n        }\n      ]\n    },\n    \"requestExample\": {\n      \"curl\": \"curl -X POST https://api.example.com/api/v1/users \\\\\\n  -H 'Content-Type: application/json' \\\\\\n  -H 'X-API-Key: your_api_key' \\\\\\n  -d '{\\\"email\\\": \\\"john.doe@example.com\\\", \\\"password\\\": \\\"securePassword123\\\", \\\"firstName\\\": \\\"John\\\", \\\"lastName\\\": \\\"Doe\\\"}'\",\n      \"javascript\": \"const response = await fetch('/api/v1/users', {\\n  method: 'POST',\\n  headers: {\\n    'Content-Type': 'application/json',\\n    'X-API-Key': 'your_api_key'\\n  },\\n  body: JSON.stringify({\\n    email: 'john.doe@example.com',\\n    password: 'securePassword123',\\n    firstName: 'John',\\n    lastName: 'Doe'\\n  })\\n});\"\n    },\n    \"responses\": {\n      \"success\": {\n        \"statusCode\": 201,\n        \"description\": \"User created successfully\",\n        \"example\": {\\n  \\\"id\\\": \\\"user_123\\\",\\n  \\\"email\\\": \\\"john.doe@example.com\\\",\\n  \\\"firstName\\\": \\\"John\\\",\\n  \\\"lastName\\\": \\\"Doe\\\",\\n  \\\"createdAt\\\": \\\"2024-03-15T10:30:00Z\\\"\\n}\"\n      },\n      \"errors\": [\n        {\n          \"statusCode\": 400,\n          \"description\": \"Invalid input data\",\n          \"example\": \"{\\\"error\\\": \\\"Validation failed\\\", \\\"details\\\": [\\\"Email already exists\\\"]}\"\n        },\n        {\n          \"statusCode\": 401,\n          \"description\": \"Invalid or missing API key\",\n          \"example\": \"{\\\"error\\\": \\\"Unauthorized\\\", \\\"message\\\": \\\"Invalid API key\\\"}\"\n        }\n      ]\n    }\n  }\n}",
+        "explanation": "This example demonstrates comprehensive API documentation generation with detailed parameters, authentication, and realistic examples."
+      }
+    ],
+    "output_format": {
+      "format": "json",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "api_documentation": {
             "type": "object",
             "properties": {
-              "id": { "type": "string" },
-              "name": { "type": "string" },
-              "email": { "type": "string", "format": "email" },
-              "isActive": { "type": "boolean" }
-            }
-          },
-          "usageExample": "curl -X GET https://api.example.com/users/u-123"
-        }
+              "endpoint": {
+                "type": "object",
+                "properties": {
+                  "method": { "type": "string" },
+                  "url": { "type": "string" },
+                  "summary": { "type": "string" },
+                  "description": { "type": "string" }
+                },
+                "required": ["method", "url", "summary"]
+              },
+              "authentication": {
+                "type": "object",
+                "properties": {
+                  "required": { "type": "boolean" },
+                  "type": { "type": "string" },
+                  "location": { "type": "string" }
+                }
+              },
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": { "type": "array", "items": { "type": "object" } },
+                  "query": { "type": "array", "items": { "type": "object" } },
+                  "body": { "type": "array", "items": { "type": "object" } }
+                }
+              },
+              "requestExample": {
+                "type": "object",
+                "properties": {
+                  "curl": { "type": "string" },
+                  "javascript": { "type": "string" }
+                }
+              },
+              "responses": {
+                "type": "object",
+                "properties": {
+                  "success": { "type": "object" },
+                  "errors": { "type": "array", "items": { "type": "object" } }
+                }
+              }
+            },
+            "required": ["endpoint", "requestExample", "responses"]
+          }
+        },
+        "required": ["api_documentation"]
+      }
+    }
+  },
+  "user_input_template": "Please generate comprehensive API documentation for the following endpoint:\n\n{{endpoint_specification}}",
+  "variables": [
+    {
+      "name": "endpoint_specification",
+      "type": "string",
+      "description": "Detailed specification of the API endpoint including method, URL, parameters, and expected behavior",
+      "required": true
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "User Creation Endpoint",
+      "inputs": {
+        "endpoint_specification": "Endpoint: POST /api/v1/users\nPurpose: Create a new user account\nParameters: email (string, required), password (string, required, min 8 chars), firstName (string, required), lastName (string, optional)\nAuthentication: API key required\nResponse: Returns user object with ID"
+      }
+    },
+    {
+      "name": "Product Search Endpoint",
+      "inputs": {
+        "endpoint_specification": "Endpoint: GET /api/v1/products/search\nPurpose: Search for products by criteria\nParameters: q (query string, required), category (string, optional), minPrice (number, optional), maxPrice (number, optional), page (number, default 1), limit (number, default 20, max 100)\nAuthentication: Optional API key for rate limiting\nResponse: Returns paginated list of products"
       }
     }
   ],
-  "input_variables": {
-    "source_code_function": {
-      "type": "string",
-      "description": "A string containing the source code of a single function."
-    }
-  },
-  "output_format": {
-    "type": "json",
-    "json_schema": {
-      "type": "object",
-      "properties": {
-        "api_documentation": {
-          "type": "object",
-          "properties": {
-            "description": { "type": "string" },
-            "httpMethod": { "type": "string" },
-            "endpointPath": { "type": "string" },
-            "parameters": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "name": { "type": "string" },
-                  "in": { "type": "string", "enum": ["path", "query", "body"] },
-                  "dataType": { "type": "string" },
-                  "description": { "type": "string" },
-                  "required": { "type": "boolean" }
-                },
-                "required": ["name", "in", "dataType", "description", "required"]
-              }
-            },
-            "returnValueSchema": { "type": "object" },
-            "usageExample": { "type": "string" }
-          },
-          "required": ["description", "httpMethod", "endpointPath", "parameters", "returnValueSchema", "usageExample"]
-        }
-      },
-      "required": ["api_documentation"]
-    }
+  "metadata": {
+    "author": "Rahul Roy",
+    "created": "2024-06-18T19:28:00Z",
+    "version": "2.0.0",
+    "category": "documentation",
+    "difficulty": "intermediate",
+    "tags": ["API Documentation", "Technical Writing", "Developer Tools", "REST API"]
   }
 } 

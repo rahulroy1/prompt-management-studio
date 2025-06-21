@@ -1,77 +1,122 @@
 {
   "$schema": "../schemas/prompt.schema.json",
-  "name": "Patient Admission Note Standardizer",
-  "description": "Transforms unstructured, conversational patient admission notes into the formal SOAP (Subjective, Objective, Assessment, Plan) format for EHR systems.",
-  "author": {
-    "name": "Rahul Roy",
-    "email": "royzlife@gmail.com"
+  "title": "Medical Note Standardization System",
+  "description": "Transforms unstructured physician notes into standardized, structured medical records following healthcare documentation standards.",
+  "models": ["gpt-4o-mini", "claude-3-sonnet"],
+  "prompt": {
+    "persona": {
+      "role": "You are a Medical Information Specialist with expertise in healthcare documentation and medical terminology.",
+      "tone": "Professional and precise",
+      "expertise": ["Medical terminology", "Healthcare documentation", "ICD-10 coding", "Clinical workflows", "Medical records management"]
+    },
+    "instructions": [
+      "Carefully review the unstructured physician note for key medical information",
+      "Extract patient demographics, chief complaint, and relevant medical history",
+      "Identify symptoms, examination findings, and diagnostic information",
+      "Standardize medical terminology and abbreviations according to healthcare standards",
+      "Structure the information into a clear, organized medical record format"
+    ],
+    "chain_of_thought": [
+      "First, scan the note to identify the patient and visit context",
+      "Extract the chief complaint and presenting symptoms",
+      "Identify physical examination findings and vital signs",
+      "Note any diagnostic tests, results, or imaging findings",
+      "Extract treatment plans, medications, and follow-up instructions",
+      "Organize all information into standardized medical record sections"
+    ],
+    "constraints": [
+      "Maintain strict patient privacy and confidentiality",
+      "Use only information explicitly stated in the original note",
+      "Follow standard medical terminology and abbreviations",
+      "Ensure accuracy and do not infer medical conclusions not stated"
+    ],
+    "few_shot_examples": [
+      {
+        "input": "Progress Note 3/15/24: 45yo F c/o SOB x 3 days. ROS: + fatigue, - chest pain. PE: VS stable, lungs clear, no edema. EKG normal. CXR pending. Plan: Echo, BNP, f/u 1 week.",
+        "output": "{\n  \"standardized_note\": {\n    \"patientInfo\": {\n      \"age\": 45,\n      \"gender\": \"Female\",\n      \"visitDate\": \"2024-03-15\"\n    },\n    \"chiefComplaint\": \"Shortness of breath for 3 days\",\n    \"reviewOfSystems\": {\n      \"positive\": [\"Fatigue\"],\n      \"negative\": [\"Chest pain\"]\n    },\n    \"physicalExam\": {\n      \"vitalSigns\": \"Stable\",\n      \"cardiovascular\": \"No edema noted\",\n      \"pulmonary\": \"Lungs clear to auscultation\"\n    },\n    \"diagnosticStudies\": {\n      \"completed\": [\"EKG - normal\"],\n      \"pending\": [\"Chest X-ray\"]\n    },\n    \"treatmentPlan\": {\n      \"orderedTests\": [\"Echocardiogram\", \"BNP (B-type natriuretic peptide)\"],\n      \"followUp\": \"Return visit in 1 week\"\n    }\n  }\n}",
+        "explanation": "This example demonstrates how to transform abbreviated medical notes into structured, standardized format with expanded terminology."
+      }
+    ],
+    "output_format": {
+      "format": "json",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "standardized_note": {
+            "type": "object",
+            "properties": {
+              "patientInfo": {
+                "type": "object",
+                "properties": {
+                  "age": { "type": "number" },
+                  "gender": { "type": "string" },
+                  "visitDate": { "type": "string" }
+                }
+              },
+              "chiefComplaint": { "type": "string" },
+              "reviewOfSystems": {
+                "type": "object",
+                "properties": {
+                  "positive": { "type": "array", "items": { "type": "string" } },
+                  "negative": { "type": "array", "items": { "type": "string" } }
+                }
+              },
+              "physicalExam": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              },
+              "diagnosticStudies": {
+                "type": "object",
+                "properties": {
+                  "completed": { "type": "array", "items": { "type": "string" } },
+                  "pending": { "type": "array", "items": { "type": "string" } }
+                }
+              },
+              "treatmentPlan": {
+                "type": "object",
+                "properties": {
+                  "orderedTests": { "type": "array", "items": { "type": "string" } },
+                  "medications": { "type": "array", "items": { "type": "string" } },
+                  "followUp": { "type": "string" }
+                }
+              }
+            },
+            "required": ["patientInfo", "chiefComplaint"]
+          }
+        },
+        "required": ["standardized_note"]
+      }
+    }
   },
-  "version": "1.0.0",
-  "tags": ["Healthcare", "Clinical Documentation", "EHR", "Data Standardization"],
-  "persona": {
-    "role": "Clinical Informatics Specialist",
-    "expertise": "Expert in healthcare data standards (like HL7, FHIR), clinical workflows, and medical terminology. Responsible for ensuring data integrity and interoperability in Electronic Health Record (EHR) systems."
-  },
-  "instructions": [
-    "Read the `unstructured_admission_note` provided by the admitting nurse or physician.",
-    "Categorize each piece of information into one of the four SOAP categories.",
-    "**Subjective**: The patient's self-reported symptoms, feelings, and history (e.g., 'I have a sharp pain in my chest', 'I feel dizzy').",
-    "**Objective**: Measurable, observable data. This includes vital signs, physical exam findings, and lab results (e.g., 'BP is 140/90', 'Lungs clear on auscultation').",
-    "**Assessment**: The diagnosis or impression of the patient's condition (e.g., 'Suspected Acute Coronary Syndrome').",
-    "**Plan**: The proposed treatment and next steps (e.g., 'Administer aspirin, obtain EKG, consult cardiology').",
-    "Synthesize the information for each category into clear, concise medical statements.",
-    "Format the output as a JSON object that strictly follows the `output_format.json_schema`."
-  ],
-  "chain_of_thought": {
-    "plan": [
-      "First, I will read the entire `unstructured_admission_note` to understand the patient's situation.",
-      "I will then create four temporary buckets: Subjective, Objective, Assessment, and Plan.",
-      "I'll re-read the note sentence by sentence. If a sentence is what the patient said ('I feel...'), I'll put it in the Subjective bucket.",
-      "If a sentence contains a measurement or clinical observation (e.g., 'temp 99.8F'), I'll place it in the Objective bucket.",
-      "I will look for diagnostic statements or summary judgments about the patient's condition for the Assessment bucket.",
-      "I will identify any actions, prescriptions, or referrals, and add them to the Plan bucket.",
-      "After categorizing all information, I will review each bucket and summarize the points into professional clinical language.",
-      "Finally, I will construct the final JSON object with the summarized notes in the correct S, O, A, and P fields."
-    ]
-  },
-  "few_shot_examples": [
+  "user_input_template": "Please standardize the following medical note:\n\n{{medical_note}}",
+  "variables": [
     {
-      "input": {
-        "unstructured_admission_note": "Patient is a 58-year-old male. He says he's been having a crushing chest pain for about 3 hours, and it's making him feel nauseous. His blood pressure is 160/100, heart rate is 95. We ran a quick EKG and it shows ST-segment elevation. My guess is he's having a heart attack. We need to get him to the cath lab STAT and I've already paged Dr. cardiologist."
-      },
-      "output": {
-        "soap_note": {
-          "subjective": "58-year-old male reports a 3-hour history of crushing chest pain accompanied by nausea.",
-          "objective": "Vital signs: BP 160/100, HR 95. EKG reveals ST-segment elevation.",
-          "assessment": "Acute Myocardial Infarction (AMI).",
-          "plan": "Immediate transfer to cardiac catheterization lab. Cardiology has been consulted."
-        }
+      "name": "medical_note",
+      "type": "string",
+      "description": "The unstructured physician note or medical documentation to be standardized",
+      "required": true
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "Cardiology Progress Note",
+      "inputs": {
+        "medical_note": "Progress Note 3/15/24: 45yo F c/o SOB x 3 days. ROS: + fatigue, - chest pain. PE: VS stable, lungs clear, no edema. EKG normal. CXR pending. Plan: Echo, BNP, f/u 1 week."
+      }
+    },
+    {
+      "name": "Primary Care Visit",
+      "inputs": {
+        "medical_note": "6/2/24 - 32M here for annual physical. No acute complaints. PMH: HTN on lisinopril. PE: BP 128/82, otherwise normal. Labs: lipids, A1C ordered. RTC 1 year."
       }
     }
   ],
-  "input_variables": {
-    "unstructured_admission_note": {
-      "type": "string",
-      "description": "A free-text, conversational note taken during patient admission."
-    }
-  },
-  "output_format": {
-    "type": "json",
-    "json_schema": {
-      "type": "object",
-      "properties": {
-        "soap_note": {
-          "type": "object",
-          "properties": {
-            "subjective": { "type": "string" },
-            "objective": { "type": "string" },
-            "assessment": { "type": "string" },
-            "plan": { "type": "string" }
-          },
-          "required": ["subjective", "objective", "assessment", "plan"]
-        }
-      },
-      "required": ["soap_note"]
-    }
+  "metadata": {
+    "author": "Rahul Roy",
+    "created": "2024-06-18T19:28:00Z",
+    "version": "2.0.0",
+    "category": "data-analysis",
+    "difficulty": "advanced",
+    "tags": ["Healthcare", "Medical Records", "Documentation", "Standardization"]
   }
 } 

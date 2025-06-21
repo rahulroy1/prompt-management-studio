@@ -132,7 +132,7 @@ export class PromptCreator {
 
   private generatePromptFile(details: PromptDetails): PromptFile {
     const basePrompt: PromptFile = {
-      $schema: 'https://promptstudio.dev/schemas/v2.0/prompt.schema.json',
+      $schema: '../schemas/prompt.schema.json',
       title: details.title,
       description: details.description || undefined,
       models: ['gpt-4o-mini'],

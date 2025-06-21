@@ -1,131 +1,97 @@
 {
   "$schema": "../schemas/prompt.schema.json",
-  "name": "Source-to-Target Data Mapper",
-  "description": "An expert prompt that analyzes source and target data schemas to generate detailed mapping and transformation rules for ETL processes.",
-  "author": {
-    "name": "Rahul Roy",
-    "email": "royzlife@gmail.com"
+  "title": "Data Transformation Mapper",
+  "description": "Analyzes source data structures and creates detailed mapping specifications for data transformation between different systems.",
+  "models": ["gpt-4o-mini", "claude-3-sonnet"],
+  "prompt": {
+    "persona": {
+      "role": "You are a Senior Data Engineer specializing in data integration and ETL processes.",
+      "tone": "Technical and precise",
+      "expertise": ["Data modeling", "ETL processes", "Data transformation", "Schema mapping", "Data integration"]
+    },
+    "instructions": [
+      "Analyze the source data structure to understand field types, relationships, and data patterns",
+      "Examine the target schema to identify corresponding fields and required transformations",
+      "Create detailed field mappings that specify how each source field maps to target fields",
+      "Identify data type conversions, format changes, and business logic requirements",
+      "Highlight any data quality issues, missing mappings, or potential transformation challenges"
+    ],
+    "chain_of_thought": [
+      "First, parse and understand the source data structure and field definitions",
+      "Next, analyze the target schema to identify matching and related fields",
+      "Map direct field correspondences where data types and formats align",
+      "Identify fields requiring transformation, conversion, or business logic",
+      "Note any unmapped fields and recommend handling strategies",
+      "Document the complete mapping specification in the required format"
+    ],
+    "few_shot_examples": [
+      {
+        "input": "Source Schema:\n- customer_id (string)\n- full_name (string)\n- email_addr (string)\n- signup_date (YYYY-MM-DD)\n\nTarget Schema:\n- id (integer)\n- first_name (string)\n- last_name (string)\n- email (string)\n- created_at (ISO datetime)",
+        "output": "{\n  \"field_mappings\": [\n    {\n      \"sourceField\": \"customer_id\",\n      \"targetField\": \"id\",\n      \"transformationType\": \"type_conversion\",\n      \"transformationLogic\": \"Convert string to integer\",\n      \"dataQualityNotes\": \"Ensure customer_id contains only numeric values\"\n    },\n    {\n      \"sourceField\": \"full_name\",\n      \"targetField\": \"first_name, last_name\",\n      \"transformationType\": \"field_splitting\",\n      \"transformationLogic\": \"Split full_name on first space: first part to first_name, remainder to last_name\",\n      \"dataQualityNotes\": \"Handle cases with no space or multiple spaces\"\n    },\n    {\n      \"sourceField\": \"email_addr\",\n      \"targetField\": \"email\",\n      \"transformationType\": \"direct_mapping\",\n      \"transformationLogic\": \"Direct copy with validation\",\n      \"dataQualityNotes\": \"Validate email format and handle nulls\"\n    },\n    {\n      \"sourceField\": \"signup_date\",\n      \"targetField\": \"created_at\",\n      \"transformationType\": \"format_conversion\",\n      \"transformationLogic\": \"Convert YYYY-MM-DD to ISO datetime format with default time 00:00:00Z\",\n      \"dataQualityNotes\": \"Validate date format and handle invalid dates\"\n    }\n  ]\n}",
+        "explanation": "This example demonstrates how to map fields between different schemas, identifying transformation requirements and data quality considerations."
+      }
+    ],
+    "output_format": {
+      "format": "json",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "field_mappings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceField": { "type": "string" },
+                "targetField": { "type": "string" },
+                "transformationType": { "type": "string" },
+                "transformationLogic": { "type": "string" },
+                "dataQualityNotes": { "type": "string" }
+              },
+              "required": ["sourceField", "targetField", "transformationType", "transformationLogic"]
+            }
+          }
+        },
+        "required": ["field_mappings"]
+      }
+    }
   },
-  "version": "1.0.0",
-  "tags": ["Data Engineering", "ETL", "Schema Mapping", "Standardization"],
-  "persona": {
-    "role": "Expert Data Architect",
-    "expertise": "Specializes in enterprise data integration, ETL/ELT pipeline design, and cross-system schema harmonization. Possesses deep knowledge of data warehousing, data governance, and transformation best practices."
-  },
-  "instructions": [
-    "Carefully analyze the provided `source_schema` and `target_schema`. Pay close attention to field names, data types, and descriptions.",
-    "Review the `business_rules` to understand the specific transformation requirements and context.",
-    "For each field in the `target_schema`, determine its corresponding source field(s) and the required transformation logic.",
-    "Clearly describe the transformation logic in plain English. This includes direct mappings, data type conversions, concatenations, calculations, and conditional logic.",
-    "If a target field cannot be mapped from the source, explicitly state that and provide a reason (e.g., 'No source field available').",
-    "Structure the final output as a single JSON object that strictly adheres to the provided `output_format.json_schema`.",
-    "Ensure every field in the `target_schema` is accounted for in the output array."
-  ],
-  "chain_of_thought": {
-    "plan": [
-      "First, I will parse and comprehend the structure of the `source_schema`, `target_schema`, and the list of `business_rules`.",
-      "Next, I will initialize an empty array for my mapping results.",
-      "I will then iterate through each field of the `target_schema` one by one.",
-      "For a given target field, I will first look for a direct, one-to-one mapping from the source schema based on name and data type compatibility.",
-      "If a direct map isn't obvious, I will scan the `business_rules` for any explicit instructions related to this target field.",
-      "Based on field names and rules, I will deduce the transformation logic. For example, combining `source.FirstName` and `source.LastName` to create `target.FullName`.",
-      "I will define the transformation rule clearly in English, such as 'Concatenate FirstName and LastName with a space in between'.",
-      "I will then construct a JSON object for this mapping, including the target field, source field(s), and the transformation rule.",
-      "After processing all target fields, I will wrap the results array in a final JSON object and present it as the output."
-    ]
-  },
-  "few_shot_examples": [
+  "user_input_template": "Please create a data mapping specification for the following:\n\nSource Schema:\n{{source_schema}}\n\nTarget Schema:\n{{target_schema}}",
+  "variables": [
     {
-      "input": {
-        "source_schema": {
-          "type": "object",
-          "properties": {
-            "CUST_ID": { "type": "number", "description": "Legacy customer identifier" },
-            "FNAME": { "type": "string", "description": "Customer's first name" },
-            "LNAME": { "type": "string", "description": "Customer's last name" },
-            "CREATED_DT": { "type": "string", "description": "Account creation date in 'YYYY-MM-DD' format" },
-            "TIER": { "type": "string", "description": "'gold', 'silver', or 'bronze'" }
-          }
-        },
-        "target_schema": {
-          "type": "object",
-          "properties": {
-            "customerId": { "type": "string", "description": "Unique identifier for the customer" },
-            "fullName": { "type": "string", "description": "Full name of the customer" },
-            "creationTimestamp": { "type": "string", "format": "date-time", "description": "ISO 8601 timestamp of account creation" },
-            "loyaltyLevel": { "type": "number", "description": "Numeric loyalty level" }
-          }
-        },
-        "business_rules": [
-          "Concatenate FNAME and LNAME to create fullName.",
-          "Convert CREATED_DT to an ISO 8601 timestamp.",
-          "Map TIER to a numeric loyaltyLevel: gold=1, silver=2, bronze=3."
-        ]
-      },
-      "output": {
-        "mappings": [
-          {
-            "targetField": "customerId",
-            "sourceFields": ["CUST_ID"],
-            "mappingType": "Transformation",
-            "transformationRule": "Convert CUST_ID from number to string."
-          },
-          {
-            "targetField": "fullName",
-            "sourceFields": ["FNAME", "LNAME"],
-            "mappingType": "Transformation",
-            "transformationRule": "Concatenate FNAME and LNAME, separated by a space."
-          },
-          {
-            "targetField": "creationTimestamp",
-            "sourceFields": ["CREATED_DT"],
-            "mappingType": "Transformation",
-            "transformationRule": "Convert the 'YYYY-MM-DD' date string to a full ISO 8601 date-time string, assuming a time of 00:00:00Z."
-          },
-          {
-            "targetField": "loyaltyLevel",
-            "sourceFields": ["TIER"],
-            "mappingType": "Transformation",
-            "transformationRule": "Apply conditional logic: IF TIER is 'gold' THEN 1, IF 'silver' THEN 2, IF 'bronze' THEN 3. Default to null if no match."
-          }
-        ]
+      "name": "source_schema",
+      "type": "string",
+      "description": "Description of the source data structure including field names and types",
+      "required": true
+    },
+    {
+      "name": "target_schema",
+      "type": "string",
+      "description": "Description of the target data structure including field names and types",
+      "required": true
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "Customer Data Mapping",
+      "inputs": {
+        "source_schema": "- customer_id (string)\n- full_name (string)\n- email_addr (string)\n- signup_date (YYYY-MM-DD)",
+        "target_schema": "- id (integer)\n- first_name (string)\n- last_name (string)\n- email (string)\n- created_at (ISO datetime)"
+      }
+    },
+    {
+      "name": "Product Catalog Mapping",
+      "inputs": {
+        "source_schema": "- product_code (string)\n- product_name (string)\n- price_usd (decimal)\n- category_id (integer)",
+        "target_schema": "- sku (string)\n- title (string)\n- price (money)\n- category (string)"
       }
     }
   ],
-  "input_variables": {
-    "source_schema": {
-      "type": "json",
-      "description": "The JSON schema of the source data system."
-    },
-    "target_schema": {
-      "type": "json",
-      "description": "The JSON schema of the target data system."
-    },
-    "business_rules": {
-      "type": "string",
-      "description": "A newline-separated list of business rules, constraints, and hints for the transformation."
-    }
-  },
-  "output_format": {
-    "type": "json",
-    "json_schema": {
-      "type": "object",
-      "properties": {
-        "mappings": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "targetField": { "type": "string" },
-              "sourceFields": { "type": "array", "items": { "type": "string" } },
-              "mappingType": { "type": "string", "enum": ["Direct", "Transformation", "Not Mapped"] },
-              "transformationRule": { "type": "string" }
-            },
-            "required": ["targetField", "sourceFields", "mappingType", "transformationRule"]
-          }
-        }
-      },
-      "required": ["mappings"]
-    }
+  "metadata": {
+    "author": "Rahul Roy",
+    "created": "2024-06-18T19:28:00Z",
+    "version": "2.0.0",
+    "category": "data-analysis",
+    "difficulty": "intermediate",
+    "tags": ["Data Engineering", "ETL", "Data Mapping", "Schema Transformation"]
   }
 } 

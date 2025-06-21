@@ -25,7 +25,7 @@
     "multi-model",
     "evaluation"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "languages": [
       {
@@ -68,36 +68,32 @@
     "commands": [
       {
         "command": "promptStudio.evaluatePrompt",
-        "title": "Prompt Studio: Evaluate Prompt",
-        "icon": "$(play)",
-        "category": "Prompt Studio"
+        "title": "Evaluate Prompt",
+        "icon": "$(play)"
       },
       {
         "command": "promptStudio.openPromptIDE",
-        "title": "Prompt Studio: Open Prompt IDE",
-        "icon": "$(edit)",
-        "category": "Prompt Studio"
+        "title": "Open Prompt IDE",
+        "icon": "$(edit)"
       },
       {
         "command": "promptStudio.createPrompt",
-        "title": "Prompt Studio: Create New Prompt",
-        "icon": "$(add)",
-        "category": "Prompt Studio"
+        "title": "Create New Prompt",
+        "icon": "$(add)"
       },
       {
         "command": "promptStudio.configureApiKeys",
-        "title": "Prompt Studio: Configure API Keys",
-        "icon": "$(key)",
-        "category": "Prompt Studio"
+        "title": "Configure API Keys",
+        "icon": "$(key)"
       },
       {
         "command": "promptStudio.openTemplateLibrary",
-        "title": "Prompt Studio: Browse Template Library",
+        "title": "Browse Template Library",
         "category": "Prompt Studio"
       },
       {
         "command": "promptStudio.comparePromptVersions",
-        "title": "Prompt Studio: Compare Prompt Versions",
+        "title": "Compare Prompt Versions",
         "category": "Prompt Studio"
       }
     ],
@@ -178,14 +174,15 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "npx mocha out/test/*.test.js --ui tdd",
-    "package": "vsce package",
-    "publish": "vsce publish"
+    "test": "npx mocha out/test/*.test.js --ui tdd"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.3",
@@ -196,7 +193,10 @@
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
     "eslint": "^8.54.0",
-    "typescript": "^5.3.2"
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.3.2",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.54.0",

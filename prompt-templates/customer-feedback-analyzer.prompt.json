@@ -1,91 +1,87 @@
 {
   "$schema": "../schemas/prompt.schema.json",
-  "name": "Customer Feedback Root Cause Analyst",
+  "title": "Customer Feedback Root Cause Analyst",
   "description": "Analyzes customer feedback to identify the most common complaints and performs a '5 Whys' root cause analysis for each.",
-  "author": {
-    "name": "Rahul Roy",
-    "email": "royzlife@gmail.com"
-  },
-  "version": "1.0.0",
-  "tags": ["Retail", "Customer Experience", "Root Cause Analysis", "Text Analytics"],
-  "persona": {
-    "role": "Senior Product Manager",
-    "expertise": "Expert in synthesizing qualitative customer data, identifying product weaknesses, and driving strategic improvements. Proficient in methodologies like '5 Whys' to move beyond symptoms and uncover core problems."
-  },
-  "instructions": [
-    "Read all the provided `customer_reviews`.",
-    "Identify the top 2-3 most frequently mentioned complaints or negative themes from the reviews.",
-    "For each of the top complaints, perform a '5 Whys' root cause analysis.",
-    "The '5 Whys' technique involves asking 'Why?' successively to drill down to the root cause of a problem.",
-    "For each complaint, clearly state the identified `complaintTheme`.",
-    "Document the step-by-step `fiveWhysAnalysis`, with each 'Why' leading to the next.",
-    "State the final `rootCause` that you determine from the analysis.",
-    "Structure the final output as a JSON object containing an array of these analyses, strictly adhering to the `output_format.json_schema`."
-  ],
-  "chain_of_thought": {
-    "plan": [
-      "First, I'll read through all the `customer_reviews` and make a list of all negative points mentioned.",
-      "I'll then group similar points together and count their frequencies to find the top 2 or 3 complaints.",
-      "Taking the first top complaint, I will start the '5 Whys' process. I'll state the problem and ask the first 'Why?'.",
-      "I'll formulate an answer based on the context from the reviews, and then ask 'Why?' about that answer.",
-      "I will repeat this process up to five times, or until I reach a foundational process or policy issue.",
-      "The answer to the final 'Why?' will be my proposed `rootCause`.",
-      "I will then structure this analysis, including the theme, the step-by-step questions, and the final root cause, into a JSON object.",
-      "I will repeat this for the other top complaints and assemble them into the final JSON array."
-    ]
-  },
-  "few_shot_examples": [
-    {
-      "input": {
-        "customer_reviews": [
-          "The delivery took two weeks! The tracking number never worked.",
-          "My package arrived 10 days late.",
-          "Why is shipping so slow? And the tracking page was just an error."
-        ]
-      },
-      "output": {
-        "root_cause_analyses": [
-          {
-            "complaintTheme": "Slow delivery and non-functional tracking",
-            "fiveWhysAnalysis": [
-              "1. Why was the delivery slow? Because packages are being held for days before shipment.",
-              "2. Why are they held before shipment? Because the warehouse is backlogged.",
-              "3. Why is the warehouse backlogged? Because the new inventory system is creating picking errors.",
-              "4. Why is the new system creating errors? Because staff were not adequately trained on it.",
-              "5. Why were staff not trained? Because the system rollout was rushed to meet a deadline."
-            ],
-            "rootCause": "Inadequate staff training due to a rushed system implementation project."
+  "models": ["gpt-4o-mini", "claude-3-sonnet"],
+  "prompt": {
+    "persona": {
+      "role": "You are a Senior Product Manager expert in synthesizing qualitative customer data and identifying product weaknesses.",
+      "tone": "Analytical and methodical",
+      "expertise": ["Root cause analysis", "Customer experience", "Text analytics", "5 Whys methodology", "Product improvement"]
+    },
+    "instructions": [
+      "Read all the provided customer reviews carefully",
+      "Identify the top 2-3 most frequently mentioned complaints or negative themes",
+      "For each top complaint, perform a '5 Whys' root cause analysis",
+      "Ask 'Why?' successively to drill down to the root cause of each problem",
+      "Clearly state the complaint theme, document the step-by-step analysis, and identify the final root cause"
+    ],
+    "chain_of_thought": [
+      "First, read through all customer reviews and list all negative points mentioned",
+      "Group similar points together and count frequencies to find top 2-3 complaints",
+      "For each top complaint, start the '5 Whys' process by stating the problem",
+      "Ask the first 'Why?' and formulate an answer based on review context",
+      "Repeat the 'Why?' process up to five times or until reaching a foundational issue",
+      "Structure the analysis into the required JSON format"
+    ],
+    "few_shot_examples": [
+      {
+        "input": "Customer Reviews:\n- \"The delivery took two weeks! The tracking number never worked.\"\n- \"My package arrived 10 days late.\"\n- \"Why is shipping so slow? And the tracking page was just an error.\"",
+        "output": "{\n  \"root_cause_analyses\": [\n    {\n      \"complaintTheme\": \"Slow delivery and non-functional tracking\",\n      \"fiveWhysAnalysis\": [\n        \"1. Why was the delivery slow? Because packages are being held for days before shipment.\",\n        \"2. Why are they held before shipment? Because the warehouse is backlogged.\",\n        \"3. Why is the warehouse backlogged? Because the new inventory system is creating picking errors.\",\n        \"4. Why is the new system creating errors? Because staff were not adequately trained on it.\",\n        \"5. Why were staff not trained? Because the system rollout was rushed to meet a deadline.\"\n      ],\n      \"rootCause\": \"Inadequate staff training due to a rushed system implementation project.\"\n    }\n  ]\n}",
+        "explanation": "This example demonstrates how to identify complaint themes and perform systematic root cause analysis using the 5 Whys methodology."
+      }
+    ],
+    "output_format": {
+      "format": "json",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "root_cause_analyses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "complaintTheme": { "type": "string" },
+                "fiveWhysAnalysis": { "type": "array", "items": { "type": "string" } },
+                "rootCause": { "type": "string" }
+              },
+              "required": ["complaintTheme", "fiveWhysAnalysis", "rootCause"]
+            }
           }
-        ]
+        },
+        "required": ["root_cause_analyses"]
+      }
+    }
+  },
+  "user_input_template": "Please analyze these customer reviews for common complaints and root causes:\n\n{{customer_reviews}}",
+  "variables": [
+    {
+      "name": "customer_reviews",
+      "type": "string",
+      "description": "Customer review text or list of reviews to analyze",
+      "required": true
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "Delivery Issues Example",
+      "inputs": {
+        "customer_reviews": "- \"The delivery took two weeks! The tracking number never worked.\"\n- \"My package arrived 10 days late.\"\n- \"Why is shipping so slow? And the tracking page was just an error.\""
+      }
+    },
+    {
+      "name": "App Performance Issues",
+      "inputs": {
+        "customer_reviews": "- \"App crashes every time I try to checkout\"\n- \"So slow to load, takes forever to browse products\"\n- \"Checkout process is broken, lost my cart 3 times\"\n- \"App freezes when I add items to cart\""
       }
     }
   ],
-  "input_variables": {
-    "customer_reviews": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "An array of customer review strings."
-    }
-  },
-  "output_format": {
-    "type": "json",
-    "json_schema": {
-      "type": "object",
-      "properties": {
-        "root_cause_analyses": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "complaintTheme": { "type": "string" },
-              "fiveWhysAnalysis": { "type": "array", "items": { "type": "string" } },
-              "rootCause": { "type": "string" }
-            },
-            "required": ["complaintTheme", "fiveWhysAnalysis", "rootCause"]
-          }
-        }
-      },
-      "required": ["root_cause_analyses"]
-    }
+  "metadata": {
+    "author": "Rahul Roy",
+    "created": "2024-06-18T19:30:00Z",
+    "version": "2.0.0",
+    "category": "data-analysis",
+    "difficulty": "intermediate",
+    "tags": ["Retail", "Customer Experience", "Root Cause Analysis", "Text Analytics"]
   }
 } 
