@@ -1,0 +1,45 @@
+# Code Owners for Prompt Management Studio
+# 
+# This file defines who owns and is responsible for reviewing changes
+# to different parts of the codebase. GitHub will automatically request
+# reviews from code owners when pull requests are opened.
+#
+# More info: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global ownership - Rahul Roy owns everything by default
+* @rahulroy1
+
+# Core extension code
+/src/ @rahulroy1
+
+# VS Code configuration and manifests
+/package.json @rahulroy1
+/language-configuration.json @rahulroy1
+/syntaxes/ @rahulroy1
+/schemas/ @rahulroy1
+
+# Documentation - require review for major docs
+/README.md @rahulroy1
+/docs/ @rahulroy1
+/CONTRIBUTING.md @rahulroy1
+/CODE_OF_CONDUCT.md @rahulroy1
+
+# Build and deployment configuration
+/webpack.config.js @rahulroy1
+/tsconfig.json @rahulroy1
+/.github/ @rahulroy1
+
+# Security-sensitive files
+/LICENSE @rahulroy1
+/CODEOWNERS @rahulroy1
+
+# Templates and examples - can be more collaborative
+/prompt-templates/ @rahulroy1
+/examples/ @rahulroy1
+
+# Scripts and automation
+/scripts/ @rahulroy1
+
+# Package files and dependencies
+/package-lock.json @rahulroy1
+/dist/ @rahulroy1 
