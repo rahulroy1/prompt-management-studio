@@ -4,8 +4,7 @@ This folder contains everything needed for demonstrations and testing of the Pro
 
 ## 📦 Contents
 
-- **`prompt-management-studio-0.1.0.vsix`** - Latest packaged extension ready for installation
-- **`prompt-management-studio-0.0.1.vsix`** - Previous version (legacy)
+- **`prompt-management-studio-0.2.0.vsix`** - Latest packaged extension ready for installation
 - **`code-review.prompt.json`** - Example prompt template for code review assistance
 - **Demo reset scripts** - Located in `../scripts/` for preparing clean demo environments
 
