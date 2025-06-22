@@ -1,7 +1,7 @@
 {
   "name": "prompt-management-studio",
   "displayName": "Prompt Management Studio",
-  "description": "A developer-native IDE for prompt engineering, evaluation, and governance.",
+  "description": "Open-source VS Code extension for developing and testing AI prompts across multiple providers with Git workflow integration.",
   "version": "0.2.0",
   "publisher": "rahulroy-dev",
   "repository": {
@@ -19,11 +19,17 @@
   "keywords": [
     "ai",
     "prompt",
-    "gpt",
-    "claude",
     "prompt engineering",
-    "multi-model",
-    "evaluation"
+    "open source",
+    "multi-provider",
+    "vscode extension",
+    "developer tools",
+    "openai",
+    "anthropic",
+    "claude",
+    "gpt",
+    "gemini",
+    "git workflow"
   ],
   "main": "./dist/extension.js",
   "contributes": {
