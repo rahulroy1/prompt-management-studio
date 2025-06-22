@@ -142,7 +142,7 @@ This release represents a **complete overhaul** of the Prompt Builder with profe
 
 ```bash
 # Install the latest version
-code --install-extension examples/prompt-management-studio-0.1.0.vsix --force
+code --install-extension examples/prompt-management-studio-0.2.0.vsix --force
 
 # Or use the demo installer
 npm run install-demo

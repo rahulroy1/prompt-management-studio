@@ -1,16 +1,24 @@
-# Prompt Management Studio - Demo Examples
+# Prompt Management Studio - Examples & Integration
 
-This folder contains everything needed for demonstrations and testing of the Prompt Management Studio VS Code extension.
+This directory contains ready-to-install VSIX packages, example prompts, and integration examples for the Prompt Management Studio extension.
 
 ## 📦 Contents
 
 - **`prompt-management-studio-0.2.0.vsix`** - Latest packaged extension ready for installation
-- **`code-review.prompt.json`** - Example prompt template for code review assistance
-- **Demo reset scripts** - Located in `../scripts/` for preparing clean demo environments
+- **Example prompts** - Sample `.prompt.json` files for different use cases
+- **Integration examples** - Complete applications showing how to integrate prompts
+- **Demo scripts** - Located in `../scripts/` for preparing clean demo environments
 
-## 🚀 Quick Demo Setup
+## 🚀 Quick Installation
 
-### Option 1: Using npm scripts (Recommended)
+```bash
+# Install the latest version (0.2.0)
+code --install-extension examples/prompt-management-studio-0.2.0.vsix
+```
+
+## 🧹 Demo Setup
+
+### **Option 1: Using npm scripts (Recommended)**
 ```bash
 # Reset demo environment (clears keys, shows instructions)
 npm run reset-demo
@@ -19,36 +27,17 @@ npm run reset-demo
 npm run install-demo
 ```
 
-### Option 2: Manual installation
+### **Option 2: Manual setup**
 ```bash
-# Install the latest extension
-code --install-extension examples/prompt-management-studio-0.1.0.vsix
+# Install the extension
+code --install-extension examples/prompt-management-studio-0.2.0.vsix
 
-# Or use VS Code UI: Extensions → Install from VSIX → Select the .vsix file
+# Clear previous state (if needed)
+# Uninstall existing extension: Extensions → Prompt Management Studio → Uninstall
+# Clear API keys: Cmd+Shift+P → "Prompt Studio: Configure API Keys" → "Remove All Keys"
 ```
 
-## 🧹 Preparing for a Clean Demo
-
-To ensure a fresh demo experience with no pre-configured settings:
-
-### 1. Clear Previous State
-- **Uninstall existing extension**: Extensions → Prompt Management Studio → Uninstall
-- **Clear API keys**: `Cmd+Shift+P` → "Prompt Studio: Configure API Keys" → "Remove All Keys"
-- **Restart VS Code** to clear any cached state
-
-### 2. Install Fresh Extension
-```bash
-npm run install-demo
-```
-
-### 3. Verify Clean State
-- Open VS Code
-- Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
-- Type: "Prompt Studio: Create New Prompt"
-- Should show welcome message (first-time use)
-- No API keys should be configured
-
-## 🎬 Demo Flow Suggestions
+## 🎬 Demo Flow (15 minutes)
 
 ### 1. **Introduction** (2 minutes)
 - Show the extension in the marketplace/extensions panel
@@ -115,15 +104,15 @@ Before starting your demo:
 
 ## 📁 Example Files
 
-### code-review.prompt.json
-A complete example showing:
-- Multi-step instructions
-- Input variables for code context
-- Few-shot examples
-- Test cases
-- Multiple AI model configurations
+### **Prompt Templates**
+- **`code-review.prompt.json`** - Complete code review assistant example
+- **`simple-demo.prompt.json`** - Basic template for quick demos
+- **`complete-test.prompt.json`** - Full-featured example with all sections
+- **`schema-validation-demo.prompt.json`** - Demonstrates schema validation features
 
-Use this as a reference for the prompt structure and schema.
+### **Integration Examples**
+- **`python-fastapi-integration/`** - Complete FastAPI application showing how to integrate prompts
+- **`spring-boot-integration/`** - Spring Boot application using Spring AI framework
 
 ## 🎯 Demo Tips
 
@@ -144,386 +133,40 @@ npm run reset-demo
 code --uninstall-extension prompt-management-studio
 ```
 
----
+## 📦 Release History
 
-**Ready to demo!** 🚀 Start with `npm run reset-demo` to prepare your environment.
-
-# 📦 Extension Packages & Examples
-
-This directory contains ready-to-install VSIX packages and example prompt files for the Prompt Management Studio extension.
-
-## 🚀 Latest Release
-
-### **v0.2.0 - User Input Template Enhancement** *(Latest)*
-- **File:** `prompt-management-studio-0.2.0.vsix` (570 KB)
+### **v0.2.0 - Core Engineering Platform** *(Latest)*
+- **File:** `prompt-management-studio-0.2.0.vsix` (8.4 MB)
 - **Key Improvements:**
-  - ✅ **Standardized Templates**: Consistent `{{user_input}}` default template
-  - ✅ **Enhanced Validation**: Better error messages for invalid templates  
-  - ✅ **Multi-Variable Support**: Improved handling of complex templates
-  - ✅ **Better UX**: More intuitive template variable handling
+  - ✅ **Structured prompt creation** with engineering standards
+  - ✅ **Multi-model testing and evaluation**
+  - ✅ **Native VS Code integration**
+  - ✅ **Production-grade variable validation**
+  - ✅ **Webpack bundling** for reliable packaging
+  - ✅ **Updated prompt templates** to latest schema
+
+### **v0.1.1 - Template Improvements**
+- **File:** `prompt-management-studio-0.1.1.vsix` (570 KB)
+- **Key Improvements:**
+  - ✅ **Enhanced template validation**
+  - ✅ **Better error handling**
+  - ✅ **Improved user experience**
 
 ### **v0.1.0 - Documentation & Quality Release**
 - **File:** `prompt-management-studio-0.1.0.vsix` (570 KB)
-- **Focus:** Complete documentation overhaul and quality improvements
+- **Key Improvements:**
+  - ✅ **Comprehensive documentation**
+  - ✅ **Quality improvements**
+  - ✅ **Bug fixes**
 
-## 📋 Installation
-
-### Quick Install (Recommended)
-```bash
-# Install the latest version
-code --install-extension examples/prompt-management-studio-0.1.1.vsix
-```
-
-### Manual Installation
-1. Open VS Code
-2. Go to Extensions (`Cmd+Shift+X` or `Ctrl+Shift+X`)
-3. Click the "..." menu → "Install from VSIX..."
-4. Select `examples/prompt-management-studio-0.1.1.vsix`
-5. Reload VS Code when prompted
-```
-
-# Examples and Packages
-
-This directory contains example prompt files and packaged versions of the Prompt Management Studio extension.
-
-## 📦 **Extension Packages**
-
-### **Latest: Version 0.2.0 - Schema Validation**
-- **File**: `prompt-management-studio-0.2.0.vsix` (8.4 MB)
-- **Features**: 
-  - 🔒 **NEW: Prompt Schema Validation** - Automatic breaking change detection
-  - 📊 Compatibility scoring and migration guidance
-  - 🚨 Pre-save validation to prevent production breaks
-  - 📝 Detailed schema change reports
-  - All previous features included
-
-### **Version 0.1.1 - Template Improvements**
-- **File**: `prompt-management-studio-0.1.1.vsix` (570 KB)
-- **Features**: Enhanced user input templates, better validation, multi-variable support
-
-## 🚀 **Installation**
-
-### **Install Latest Version (Recommended)**
-```bash
-code --install-extension examples/prompt-management-studio-0.2.0.vsix
-```
-
-### **Install Previous Version**
-```bash
-code --install-extension examples/prompt-management-studio-0.1.1.vsix
-```
-
-### **Uninstall**
-```bash
-code --uninstall-extension rahulroy-dev.prompt-management-studio
-```
-
-## 📁 **Example Files**
-
-### **Schema Validation Demo**
-- **File**: `schema-validation-demo.prompt.json`
-- **Purpose**: Demonstrates the new schema validation feature
-- **Features**: Complete variable schema tracking, breaking change history
-
-### **Code Review Assistant**
-- **File**: `code-review-assistant.prompt.json`
-- **Purpose**: Comprehensive code review prompt for security and performance analysis
-- **Models**: GPT-4, Claude 3.5 Sonnet
-
-### **Content Generation**
-- **File**: `content-generator.prompt.json`
-- **Purpose**: Multi-format content creation with structured output
-- **Features**: Few-shot examples, output format specification
-
-### **Data Analysis Helper**
-- **File**: `data-analysis-helper.prompt.json`
-- **Purpose**: Statistical analysis and insight generation
-- **Features**: Chain-of-thought reasoning, constraint handling
-
-### **Customer Service Bot**
-- **File**: `customer-service-bot.prompt.json`
-- **Purpose**: Professional customer support responses
-- **Features**: Tone specification, escalation handling
-
-### **Documentation Writer**
-- **File**: `documentation-writer.prompt.json`
-- **Purpose**: Technical documentation generation
-- **Features**: Structured output, multiple formats
-
-### **Translation Assistant**
-- **File**: `translation-assistant.prompt.json`
-- **Purpose**: Multi-language translation with context preservation
-- **Features**: Cultural adaptation, formality levels
-
-## 🎯 **Quick Start**
-
-1. **Install the extension** using one of the commands above
-2. **Open any `.prompt.json` file** from this directory
-3. **Try the Visual Builder** - VS Code will automatically open the prompt builder interface
-4. **Test with different models** - Use the "Test Now" feature to compare responses
-5. **Experiment with schema validation** - Try modifying variables in the schema validation demo
-
-## 🔧 **Development**
-
-If you're contributing to the project:
-
-```bash
-# Install dependencies
-npm install
-
-# Run tests
-npm test
-
-# Build new package
-npx vsce package
-
-# Install your build
-code --install-extension prompt-management-studio-X.X.X.vsix
-```
-
-## 📊 **Version History**
+## 📊 Version Comparison
 
 | Version | Size | Key Features | Release Date |
 |---------|------|--------------|--------------|
-| **0.2.0** | 8.4 MB | **Schema Validation**, Breaking change detection | June 2024 |
-| 0.1.1 | 570 KB | Template improvements, Better validation | June 2024 |
-| 0.1.0 | - | Initial release, Multi-model support | June 2024 |
+| 0.2.0 | 8.4 MB | Core engineering platform, Multi-model testing | January 2024 |
+| 0.1.1 | 570 KB | Template improvements, Better validation | January 2024 |
+| 0.1.0 | 570 KB | Initial release, Multi-model support | January 2024 |
 
-## 💡 **Tips**
+---
 
-- **Schema Validation**: Try modifying variables in the demo file to see breaking change detection in action
-- **Multi-Model Testing**: Use the side-by-side comparison to evaluate different AI models
-- **Template Variables**: Use `{{variable_name}}` syntax for dynamic content
-- **Version Control**: All `.prompt.json` files work perfectly with Git
-- **Team Collaboration**: Share prompt files across your team for consistent AI interactions
-
-# Prompt Management Studio - Integration Examples
-
-This directory contains practical examples showing how to integrate prompts from Prompt Management Studio into real applications.
-
-## 📁 Available Examples
-
-### 🐍 **Python FastAPI Integration**
-**Location**: `python-fastapi-integration/`
-
-A complete FastAPI application demonstrating:
-- Multi-provider AI integration (OpenAI, Anthropic, Google)
-- Automatic prompt loading from `.prompt.json` files
-- RESTful API endpoints for code review and customer feedback
-- Structured prompt compilation and variable substitution
-- Comprehensive error handling
-
-**Quick Start**:
-```bash
-cd python-fastapi-integration
-pip install -r requirements.txt
-cp env.example .env
-# Edit .env with your API keys
-python main.py
-```
-
-### ☕ **Spring Boot Integration**
-**Location**: `spring-boot-integration/`
-
-A Spring Boot application using Spring AI showing:
-- Native Spring AI integration with multiple providers
-- Automatic prompt template loading
-- RESTful API with validation
-- Structured prompt compilation
-- Production-ready configuration
-
-**Quick Start**:
-```bash
-cd spring-boot-integration
-export OPENAI_API_KEY=your_key_here
-export ANTHROPIC_API_KEY=your_key_here
-mvn spring-boot:run
-```
-
-## 🎯 **What These Examples Demonstrate**
-
-### **1. Seamless Integration**
-Both examples show how to:
-- Load prompts directly from Prompt Management Studio files
-- Compile structured prompts into provider-specific formats
-- Handle multiple AI providers with a single codebase
-- Maintain prompt version control with your application code
-
-### **2. Production-Ready Patterns**
-- **Error handling**: Comprehensive error management for API failures
-- **Validation**: Input validation and type checking
-- **Configuration**: Environment-based configuration management
-- **Monitoring**: Health checks and logging
-- **Documentation**: Complete API documentation
-
-### **3. Real-World Use Cases**
-- **Code Review**: Automated code analysis and recommendations
-- **Customer Feedback**: Sentiment analysis and response generation
-- **Extensible Architecture**: Easy to add new prompts and providers
-
-## 🔧 **Key Integration Patterns**
-
-### **Prompt Loading**
-```python
-# Python - Automatic loading from directory
-for filename in os.listdir(prompts_dir):
-    if filename.endswith('.prompt.json'):
-        # Load and parse prompt template
-```
-
-```java
-// Java - Spring Boot service
-@PostConstruct
-public void loadPrompts() {
-    // Load all .prompt.json files from templates directory
-}
-```
-
-### **Prompt Compilation**
-Both examples demonstrate how to convert the structured Prompt Management Studio format into provider-specific prompts:
-
-1. **Persona**: Set AI role and expertise
-2. **Instructions**: Step-by-step directives
-3. **Examples**: Few-shot learning demonstrations
-4. **Chain-of-Thought**: Systematic reasoning steps
-5. **Variables**: Dynamic content substitution
-
-### **Multi-Provider Support**
-```python
-# Python - Provider selection
-if provider == "openai":
-    return await self._call_openai(compiled_prompt)
-elif provider == "anthropic":
-    return await self._call_anthropic(compiled_prompt)
-```
-
-```java
-// Java - Spring AI ChatClient injection
-@Autowired @Qualifier("openaiChatClient") private ChatClient openaiClient;
-@Autowired @Qualifier("anthropicChatClient") private ChatClient anthropicClient;
-```
-
-## 🚀 **Getting Started**
-
-### **Prerequisites**
-- API keys for at least one provider (OpenAI, Anthropic, or Google)
-- Python 3.8+ (for FastAPI example)
-- Java 17+ (for Spring Boot example)
-- Maven 3.6+ (for Spring Boot example)
-
-### **1. Choose Your Framework**
-- **FastAPI**: If you prefer Python and async/await patterns
-- **Spring Boot**: If you prefer Java and enterprise patterns
-
-### **2. Set Up API Keys**
-```bash
-# For Python FastAPI
-export OPENAI_API_KEY=your_key_here
-export ANTHROPIC_API_KEY=your_key_here
-export GOOGLE_API_KEY=your_key_here
-
-# For Spring Boot
-export OPENAI_API_KEY=your_key_here
-export ANTHROPIC_API_KEY=your_key_here
-export GOOGLE_PROJECT_ID=your_project_id_here
-```
-
-### **3. Run the Application**
-```bash
-# Python FastAPI
-cd python-fastapi-integration
-python main.py
-
-# Spring Boot
-cd spring-boot-integration
-mvn spring-boot:run
-```
-
-### **4. Test the Integration**
-```bash
-# Code Review
-curl -X POST "http://localhost:8000/code-review" \
-  -H "Content-Type: application/json" \
-  -d '{"code": "def add(a, b): return a + b", "language": "python"}'
-
-# Customer Feedback
-curl -X POST "http://localhost:8000/customer-feedback" \
-  -H "Content-Type: application/json" \
-  -d '{"feedback_text": "Great app!", "customer_sentiment": "positive"}'
-```
-
-## 📊 **API Endpoints**
-
-Both examples provide the same core endpoints:
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Root endpoint with available prompts |
-| `/prompts` | GET | List all loaded prompts |
-| `/code-review` | POST | Review code using AI |
-| `/customer-feedback` | POST | Analyze customer feedback |
-| `/health` | GET | Health check |
-
-## 🔄 **Extending the Examples**
-
-### **Adding New Prompts**
-1. Create a new `.prompt.json` file in the `prompt-templates` directory
-2. The application will automatically load it
-3. Create a new endpoint to use the prompt
-
-### **Adding New Providers**
-1. Add the provider's SDK/dependency
-2. Configure API keys and settings
-3. Add provider-specific client code
-4. Update the provider selection logic
-
-### **Customizing Prompt Compilation**
-Modify the `compilePrompt()` method to customize how structured prompts are converted to text.
-
-## 🏗️ **Architecture Patterns**
-
-### **Separation of Concerns**
-- **PromptManager**: Handles prompt loading and compilation
-- **Controllers**: Handle HTTP requests and responses
-- **Models**: Define data structures and validation
-- **Configuration**: Manage API keys and settings
-
-### **Error Handling**
-- **API Errors**: Provider-specific error handling
-- **Validation Errors**: Input validation with clear messages
-- **System Errors**: Graceful degradation and logging
-
-### **Configuration Management**
-- **Environment Variables**: Secure API key management
-- **Application Properties**: Framework-specific configuration
-- **Default Values**: Sensible defaults for development
-
-## 📚 **Learning Resources**
-
-### **Framework Documentation**
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [Spring AI Documentation](https://docs.spring.io/spring-ai/reference/)
-
-### **AI Provider Documentation**
-- [OpenAI API](https://platform.openai.com/docs)
-- [Anthropic API](https://docs.anthropic.com/)
-- [Google Vertex AI](https://cloud.google.com/vertex-ai/docs)
-
-### **Prompt Engineering**
-- [Prompt Management Studio Documentation](../docs/)
-- [Prompt Templates](../prompt-templates/)
-
-## 🤝 **Contributing**
-
-We welcome contributions to improve these integration examples:
-
-- **New Framework Examples**: Add examples for other frameworks (Node.js, .NET, etc.)
-- **Enhanced Features**: Add authentication, rate limiting, caching, etc.
-- **Better Documentation**: Improve setup instructions and API documentation
-- **Testing**: Add comprehensive test suites
-- **Performance**: Optimize prompt loading and execution
-
-## 📄 **License**
-
-These examples are provided under the same MIT license as the main project.
+**Ready to demo!** 🚀 Start with `npm run reset-demo` to prepare your environment.

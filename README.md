@@ -19,53 +19,33 @@ We noticed a gap in the current AI tooling landscape - most solutions either:
 
 **Our goal**: Combine the convenience of IDE integration with the flexibility of multi-provider support.
 
-## 🚨 **Common Challenges We're Addressing**
+## 🚀 **Quick Start**
 
-Based on feedback from the developer community, we've identified several pain points:
+### **Install & Run (2 minutes)**
+```bash
+# Install the extension
+code --install-extension examples/prompt-management-studio-0.2.0.vsix
 
-**Workflow Disruption:**
-- Switching between VS Code and web-based AI tools
-- Copy-pasting prompts between different platforms
-- Limited or no Git integration for prompt versioning
-- Difficulty working offline or with sensitive data
+# Create your first prompt
+# Press Cmd+Shift+P → "Prompt Studio: Create New Prompt"
+```
 
-**Platform Dependencies:**
-- Vendor-specific formats that don't transfer between providers
-- Need to learn different interfaces for each AI service
-- Uncertainty about long-term access to platforms
+### **What You'll Get**
+- ✅ **Visual prompt builder** - No JSON writing required
+- ✅ **Multi-model testing** - Compare GPT-4, Claude, Gemini side-by-side
+- ✅ **Schema validation** - Prevent breaking changes automatically
+- ✅ **Git integration** - Version control for your prompts
+- ✅ **Template library** - 10+ professional templates included
 
-**Development Friction:**
-- Complex setup for code-based solutions
-- Lack of visual tools for prompt building
-- Inconsistent testing across different models
+## 🎬 **See It In Action**
 
-**Community Need:** A tool that integrates with existing developer workflows while maintaining flexibility.
+![Prompt Studio Demo](examples/prompt-studio-demo-compact.gif)
 
-## 🚀 **Our Solution: Best of Both Worlds**
-
-### **💻 Native VS Code Integration**
-Work where you're already productive:
-- **Custom `.prompt.json` editor** with guided UI
-- **IntelliSense and validation** like any code file
-- **Command palette integration** for instant access
-- **Git workflow native** - commit, branch, merge prompts
-- **No context switching** - build and test in one place
-
-### **🔓 Complete Vendor Freedom**
-Own your prompts with provider-agnostic architecture:
-- **One JSON format** works with ALL major AI providers
-- **Prompt compilation engine** translates to provider-specific APIs
-- **Switch providers instantly** without rewriting prompts
-- **Export anywhere** - migrate to any platform anytime
-- **Zero platform fees** - only pay providers for actual usage
-
-### **⚡ Instant Multi-Model Testing**
-Compare responses across providers without leaving your editor:
-- OpenAI (GPT-4, GPT-3.5)
-- Anthropic (Claude)
-- Google (Gemini)
-- Side-by-side response comparison
-- Real-time cost and performance insights
+**Complete walkthrough showing:**
+- Creating a Python code review prompt from scratch
+- Testing across multiple AI providers (GPT-4, Claude, Gemini)  
+- Comparing responses and performance metrics
+- Exporting and sharing prompts with your team
 
 ## 📋 **Structured Engineering Approach**
 
@@ -144,26 +124,72 @@ Apply software engineering best practices to prompt development:
 - Comparing responses and performance metrics
 - Exporting and sharing prompts with your team
 
-## 🛠️ **Installation & Quick Start**
+## 📋 **Structured Engineering Approach**
 
-### **Install the Extension**
-```bash
-code --install-extension examples/prompt-management-studio-0.2.0.vsix
+Apply software engineering best practices to prompt development:
+
+```json
+{
+  "title": "Code Review Assistant",
+  "prompt": {
+    "persona": {
+      "role": "You are a senior software engineer with 10+ years experience",
+      "expertise": "Code quality, security, and performance optimization",
+      "tone": "Professional but encouraging"
+    },
+    "instructions": [
+      "Review the provided code for potential issues",
+      "Focus on security vulnerabilities and performance problems", 
+      "Provide specific, actionable recommendations",
+      "Explain your reasoning for each suggestion"
+    ],
+    "few_shot_examples": [
+      {
+        "input": "function add(a, b) { return a + b }",
+        "analysis": "Missing input validation, no type checking",
+        "output": "Consider adding parameter validation and TypeScript types..."
+      }
+    ],
+    "chain_of_thought": [
+      "First, scan for obvious syntax errors",
+      "Then analyze logic and edge cases", 
+      "Check for security vulnerabilities",
+      "Finally, suggest performance improvements"
+    ]
+  },
+  "user_input_template": "Review this {{language}} code:\n\n{{code}}",
+  "variables": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "description": "Source code to review"
+    },
+    {
+      "name": "language", 
+      "type": "string",
+      "required": true,
+ed      "description": "Programming language (e.g., Python, JavaScript)"
+    }
+  ],
+  "test_cases": [
+    {
+      "name": "SQL Injection Risk",
+      "inputs": {
+        "code": "query = \"SELECT * FROM users WHERE id = \" + user_id",
+        "language": "python"
+      }
+    }
+  ]
+}
 ```
 
-### **Set Up Your API Keys**
-1. Open Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-2. Run `Prompt Studio: Configure API Keys`
-3. Add keys for the providers you want to use (OpenAI, Anthropic, Google)
-
-### **Create Your First Prompt**
-1. Create a new file: `my-prompt.prompt.json`
-2. VS Code opens the guided prompt builder automatically
-3. Fill in each section using the form interface
-4. Click "Test Now" to try it across different models
-5. Save and commit like any other code file
-
-**🎯 You'll be creating structured prompts in under 5 minutes!**
+**Why This Structure Works:**
+- 🎯 **Persona** sets clear expectations and context
+- 📝 **Instructions** break down complex tasks into clear steps
+- 💡 **Examples** teach the AI your preferred response style
+- 🧠 **Chain-of-thought** encourages systematic reasoning
+- 🔧 **Variables** make prompts reusable and testable
 
 ## 🔧 **Core Features**
 
@@ -190,12 +216,6 @@ code --install-extension examples/prompt-management-studio-0.2.0.vsix
 - **VS Code native** - syntax highlighting, IntelliSense, validation
 - **Template variables** with `{{variable}}` syntax and type checking
 - **Command palette** integration for quick actions
-
-### **🔄 Variable Management**
-- **Type validation** ensures your variables work as expected
-- **Required/optional** parameter definitions
-- **Default values** for easier testing
-- **Auto-completion** in VS Code for defined variables
 
 ## 📚 **Business-Ready Template Library**
 

@@ -26,14 +26,11 @@
 
 ---
 
-## 🎯 **Installation**
+## 🎯 **Step 1: Installation**
 
-### **Option 1: Install Pre-built Package (Recommended)**
-
-Download and install the latest version with schema validation:
-
+### **Install the Extension**
 ```bash
-# Install the latest version (0.2.0) with schema validation
+# Install the latest version (0.2.0)
 code --install-extension examples/prompt-management-studio-0.2.0.vsix
 ```
 
@@ -43,16 +40,9 @@ code --install-extension examples/prompt-management-studio-0.2.0.vsix
 - 🚨 Pre-save validation to prevent production breaks
 - 📝 Detailed schema change reports
 
-### **Option 2: Install Previous Version**
-
-```bash
-# Install previous stable version (0.1.1)
-code --install-extension examples/prompt-management-studio-0.1.1.vsix
-```
-
 ---
 
-## 🔧 Step 2: Configure API Keys (1 minute)
+## 🔧 **Step 2: Configure API Keys (1 minute)**
 
 1. **Press `Cmd+Shift+P`** (Mac) or `Ctrl+Shift+P` (Windows/Linux) - Command Palette
 2. **Type:** "Prompt Studio: Configure API Keys"
@@ -66,7 +56,7 @@ code --install-extension examples/prompt-management-studio-0.1.1.vsix
 
 ---
 
-## 🎨 Step 3: Create Your First Prompt (2 minutes)
+## 🎨 **Step 3: Create Your First Prompt (2 minutes)**
 
 ### Method 1: Visual Builder (Recommended)
 1. **Press `Cmd+Shift+P`** → "Prompt Studio: Create New Prompt"
@@ -91,7 +81,7 @@ code --install-extension examples/prompt-management-studio-0.1.1.vsix
 
 ---
 
-## 🧪 Step 4: Test & Iterate (2 minutes)
+## 🧪 **Step 4: Test & Iterate (2 minutes)**
 
 ### Built-in Multi-Model Testing
 1. **In the Visual Builder:**
@@ -111,7 +101,7 @@ code --install-extension examples/prompt-management-studio-0.1.1.vsix
 
 ---
 
-## 📤 Step 5: Share & Collaborate (1 minute)
+## 📤 **Step 5: Share & Collaborate (1 minute)**
 
 ### Export Options
 - **📄 JSON File** - Share with colleagues directly
@@ -132,7 +122,7 @@ git push origin feature/new-prompt
 
 ---
 
-## 🎯 Real-World Example
+## 🎯 **Real-World Example**
 
 ### Creating a "Code Review Assistant"
 
@@ -159,7 +149,7 @@ Template: Chain of Thought
 
 ---
 
-## 🔄 Round-Trip Editing Workflow
+## 🔄 **Round-Trip Editing Workflow**
 
 ### Scenario: Improving a Team Template
 ```
@@ -178,7 +168,7 @@ Template: Chain of Thought
 
 ---
 
-## 📊 What You Get
+## 📊 **What You Get**
 
 ### Immediate Value
 - **Visual prompt creation** - No JSON writing
@@ -194,7 +184,7 @@ Template: Chain of Thought
 
 ---
 
-## 🧹 Demo & Testing Setup
+## 🧹 **Demo & Testing Setup**
 
 ### Preparing for a Clean Demo
 To ensure a fresh demo experience with no pre-configured settings:
@@ -224,7 +214,7 @@ To ensure a fresh demo experience with no pre-configured settings:
 
 ---
 
-## 🆘 Quick Troubleshooting
+## 🆘 **Quick Troubleshooting**
 
 ### Extension Not Loading?
 ```bash
@@ -255,12 +245,12 @@ npm run compile
 
 ---
 
-## 📁 Example Files
+## 📁 **Example Files**
 
 The `examples/` folder contains:
 - **`code-review.prompt.json`** - Complete code review assistant example
-- **`prompt-management-studio-0.1.0.vsix`** - Latest packaged extension
-- **`prompt-management-studio-0.0.1.vsix`** - Previous version (legacy)
+- **`prompt-management-studio-0.2.0.vsix`** - Latest packaged extension
+- **`prompt-management-studio-0.1.1.vsix`** - Previous stable version
 - **Demo scripts** - Automated setup and reset tools
 
 ### Using the Code Review Example
@@ -278,7 +268,7 @@ code examples/code-review.prompt.json
 
 ---
 
-## 🚀 Next Steps
+## 🚀 **Next Steps**
 
 ### Explore Templates
 - Browse `prompt-templates/` folder for industry-specific examples

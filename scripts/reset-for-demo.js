@@ -48,7 +48,7 @@ console.log('   • Find "Prompt Management Studio"');
 console.log('   • Click gear icon → Uninstall\n');
 
 console.log('4. Install Fresh Extension for Demo:');
-console.log(`   • Run: code --install-extension examples/${vsixFiles[0] || 'prompt-management-studio-0.0.1.vsix'}`);
+console.log(`   • Run: code --install-extension examples/${vsixFiles[0] || 'prompt-management-studio-0.2.0.vsix'}`);
 console.log('   • Or use VS Code UI: Extensions → Install from VSIX');
 console.log('   • IMPORTANT: Reload VS Code window after installation\n');
 
