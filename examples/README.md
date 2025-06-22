@@ -297,3 +297,234 @@ code --install-extension prompt-management-studio-X.X.X.vsix
 - **Template Variables**: Use `{{variable_name}}` syntax for dynamic content
 - **Version Control**: All `.prompt.json` files work perfectly with Git
 - **Team Collaboration**: Share prompt files across your team for consistent AI interactions
+
+# Prompt Management Studio - Integration Examples
+
+This directory contains practical examples showing how to integrate prompts from Prompt Management Studio into real applications.
+
+## 📁 Available Examples
+
+### 🐍 **Python FastAPI Integration**
+**Location**: `python-fastapi-integration/`
+
+A complete FastAPI application demonstrating:
+- Multi-provider AI integration (OpenAI, Anthropic, Google)
+- Automatic prompt loading from `.prompt.json` files
+- RESTful API endpoints for code review and customer feedback
+- Structured prompt compilation and variable substitution
+- Comprehensive error handling
+
+**Quick Start**:
+```bash
+cd python-fastapi-integration
+pip install -r requirements.txt
+cp env.example .env
+# Edit .env with your API keys
+python main.py
+```
+
+### ☕ **Spring Boot Integration**
+**Location**: `spring-boot-integration/`
+
+A Spring Boot application using Spring AI showing:
+- Native Spring AI integration with multiple providers
+- Automatic prompt template loading
+- RESTful API with validation
+- Structured prompt compilation
+- Production-ready configuration
+
+**Quick Start**:
+```bash
+cd spring-boot-integration
+export OPENAI_API_KEY=your_key_here
+export ANTHROPIC_API_KEY=your_key_here
+mvn spring-boot:run
+```
+
+## 🎯 **What These Examples Demonstrate**
+
+### **1. Seamless Integration**
+Both examples show how to:
+- Load prompts directly from Prompt Management Studio files
+- Compile structured prompts into provider-specific formats
+- Handle multiple AI providers with a single codebase
+- Maintain prompt version control with your application code
+
+### **2. Production-Ready Patterns**
+- **Error handling**: Comprehensive error management for API failures
+- **Validation**: Input validation and type checking
+- **Configuration**: Environment-based configuration management
+- **Monitoring**: Health checks and logging
+- **Documentation**: Complete API documentation
+
+### **3. Real-World Use Cases**
+- **Code Review**: Automated code analysis and recommendations
+- **Customer Feedback**: Sentiment analysis and response generation
+- **Extensible Architecture**: Easy to add new prompts and providers
+
+## 🔧 **Key Integration Patterns**
+
+### **Prompt Loading**
+```python
+# Python - Automatic loading from directory
+for filename in os.listdir(prompts_dir):
+    if filename.endswith('.prompt.json'):
+        # Load and parse prompt template
+```
+
+```java
+// Java - Spring Boot service
+@PostConstruct
+public void loadPrompts() {
+    // Load all .prompt.json files from templates directory
+}
+```
+
+### **Prompt Compilation**
+Both examples demonstrate how to convert the structured Prompt Management Studio format into provider-specific prompts:
+
+1. **Persona**: Set AI role and expertise
+2. **Instructions**: Step-by-step directives
+3. **Examples**: Few-shot learning demonstrations
+4. **Chain-of-Thought**: Systematic reasoning steps
+5. **Variables**: Dynamic content substitution
+
+### **Multi-Provider Support**
+```python
+# Python - Provider selection
+if provider == "openai":
+    return await self._call_openai(compiled_prompt)
+elif provider == "anthropic":
+    return await self._call_anthropic(compiled_prompt)
+```
+
+```java
+// Java - Spring AI ChatClient injection
+@Autowired @Qualifier("openaiChatClient") private ChatClient openaiClient;
+@Autowired @Qualifier("anthropicChatClient") private ChatClient anthropicClient;
+```
+
+## 🚀 **Getting Started**
+
+### **Prerequisites**
+- API keys for at least one provider (OpenAI, Anthropic, or Google)
+- Python 3.8+ (for FastAPI example)
+- Java 17+ (for Spring Boot example)
+- Maven 3.6+ (for Spring Boot example)
+
+### **1. Choose Your Framework**
+- **FastAPI**: If you prefer Python and async/await patterns
+- **Spring Boot**: If you prefer Java and enterprise patterns
+
+### **2. Set Up API Keys**
+```bash
+# For Python FastAPI
+export OPENAI_API_KEY=your_key_here
+export ANTHROPIC_API_KEY=your_key_here
+export GOOGLE_API_KEY=your_key_here
+
+# For Spring Boot
+export OPENAI_API_KEY=your_key_here
+export ANTHROPIC_API_KEY=your_key_here
+export GOOGLE_PROJECT_ID=your_project_id_here
+```
+
+### **3. Run the Application**
+```bash
+# Python FastAPI
+cd python-fastapi-integration
+python main.py
+
+# Spring Boot
+cd spring-boot-integration
+mvn spring-boot:run
+```
+
+### **4. Test the Integration**
+```bash
+# Code Review
+curl -X POST "http://localhost:8000/code-review" \
+  -H "Content-Type: application/json" \
+  -d '{"code": "def add(a, b): return a + b", "language": "python"}'
+
+# Customer Feedback
+curl -X POST "http://localhost:8000/customer-feedback" \
+  -H "Content-Type: application/json" \
+  -d '{"feedback_text": "Great app!", "customer_sentiment": "positive"}'
+```
+
+## 📊 **API Endpoints**
+
+Both examples provide the same core endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Root endpoint with available prompts |
+| `/prompts` | GET | List all loaded prompts |
+| `/code-review` | POST | Review code using AI |
+| `/customer-feedback` | POST | Analyze customer feedback |
+| `/health` | GET | Health check |
+
+## 🔄 **Extending the Examples**
+
+### **Adding New Prompts**
+1. Create a new `.prompt.json` file in the `prompt-templates` directory
+2. The application will automatically load it
+3. Create a new endpoint to use the prompt
+
+### **Adding New Providers**
+1. Add the provider's SDK/dependency
+2. Configure API keys and settings
+3. Add provider-specific client code
+4. Update the provider selection logic
+
+### **Customizing Prompt Compilation**
+Modify the `compilePrompt()` method to customize how structured prompts are converted to text.
+
+## 🏗️ **Architecture Patterns**
+
+### **Separation of Concerns**
+- **PromptManager**: Handles prompt loading and compilation
+- **Controllers**: Handle HTTP requests and responses
+- **Models**: Define data structures and validation
+- **Configuration**: Manage API keys and settings
+
+### **Error Handling**
+- **API Errors**: Provider-specific error handling
+- **Validation Errors**: Input validation with clear messages
+- **System Errors**: Graceful degradation and logging
+
+### **Configuration Management**
+- **Environment Variables**: Secure API key management
+- **Application Properties**: Framework-specific configuration
+- **Default Values**: Sensible defaults for development
+
+## 📚 **Learning Resources**
+
+### **Framework Documentation**
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
+- [Spring AI Documentation](https://docs.spring.io/spring-ai/reference/)
+
+### **AI Provider Documentation**
+- [OpenAI API](https://platform.openai.com/docs)
+- [Anthropic API](https://docs.anthropic.com/)
+- [Google Vertex AI](https://cloud.google.com/vertex-ai/docs)
+
+### **Prompt Engineering**
+- [Prompt Management Studio Documentation](../docs/)
+- [Prompt Templates](../prompt-templates/)
+
+## 🤝 **Contributing**
+
+We welcome contributions to improve these integration examples:
+
+- **New Framework Examples**: Add examples for other frameworks (Node.js, .NET, etc.)
+- **Enhanced Features**: Add authentication, rate limiting, caching, etc.
+- **Better Documentation**: Improve setup instructions and API documentation
+- **Testing**: Add comprehensive test suites
+- **Performance**: Optimize prompt loading and execution
+
+## 📄 **License**
+
+These examples are provided under the same MIT license as the main project.
