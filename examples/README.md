@@ -154,8 +154,8 @@ This directory contains ready-to-install VSIX packages and example prompt files 
 
 ## 🚀 Latest Release
 
-### **v0.1.1 - User Input Template Enhancement** *(Latest)*
-- **File:** `prompt-management-studio-0.1.1.vsix` (570 KB)
+### **v0.2.0 - User Input Template Enhancement** *(Latest)*
+- **File:** `prompt-management-studio-0.2.0.vsix` (570 KB)
 - **Key Improvements:**
   - ✅ **Standardized Templates**: Consistent `{{user_input}}` default template
   - ✅ **Enhanced Validation**: Better error messages for invalid templates  
