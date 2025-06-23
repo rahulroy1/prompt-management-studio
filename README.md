@@ -2,7 +2,7 @@
 
 ## 🏗️ **Bring Engineering Discipline to Prompt Development**
 
-This open-source extension brings a structured, test-driven approach to prompt engineering, helping you build more reliable and maintainable AI features. This VS Code extension lets you develop, test, and manage AI prompts across ALL major providers without vendor lock-in. Transform prompt creation from chaotic copy-paste to structured, testable, version-controlled engineering practice.
+This open-source extension brings a structured, test-driven approach to prompt engineering, helping you develop, test, and manage AI prompts across ALL major providers without vendor lock-in. Transform prompt creation from chaotic copy-paste to structured, testable, version-controlled engineering practice.
 
 **Build once, run anywhere - from your code editor.**
 
