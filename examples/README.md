@@ -1,20 +1,36 @@
-# Prompt Management Studio - Examples & Integration
+# Prompt Management Studio - Examples
 
-This directory contains ready-to-install VSIX packages, example prompts, and integration examples for the Prompt Management Studio extension.
+Welcome to the examples directory for **Prompt Management Studio**! This folder contains a collection of resources to help you get started, including sample prompts, integration guides, and the packaged extension file.
 
 ## 📦 Contents
 
-- **`prompt-management-studio-0.2.0.vsix`** - Latest packaged extension ready for installation
+- **`prompt-management-studio-0.2.1.vsix`** - Latest packaged extension ready for installation
+- **`Prompt Studio-demo.mp4`** - Video demonstration of the extension's features
+- **`prompt-studio-demo-optimized.gif`** - Animated GIF showcasing the prompt builder UI
 - **Example prompts** - Sample `.prompt.json` files for different use cases
 - **Integration examples** - Complete applications showing how to integrate prompts
 - **Demo scripts** - Located in `../scripts/` for preparing clean demo environments
 
 ## 🚀 Quick Installation
 
+Install the extension directly from the command line:
+
 ```bash
-# Install the latest version (0.2.0)
-code --install-extension examples/prompt-management-studio-0.2.0.vsix
+# Install the latest version (0.2.1)
+code --install-extension examples/prompt-management-studio-0.2.1.vsix
 ```
+
+## How to Use
+
+For detailed instructions on how to use the examples, please refer to the main [README.md](../README.md) file and the official [documentation](../docs/README.md).
+
+To get started quickly, install the packaged VSIX file from the `examples` directory:
+
+```bash
+code --install-extension examples/prompt-management-studio-0.2.1.vsix
+```
+
+This command will install the Prompt Management Studio extension in your VS Code.
 
 ## 🧹 Demo Setup
 
@@ -30,7 +46,7 @@ npm run install-demo
 ### **Option 2: Manual setup**
 ```bash
 # Install the extension
-code --install-extension examples/prompt-management-studio-0.2.0.vsix
+code --install-extension examples/prompt-management-studio-0.2.1.vsix
 
 # Clear previous state (if needed)
 # Uninstall existing extension: Extensions → Prompt Management Studio → Uninstall
@@ -135,38 +151,39 @@ code --uninstall-extension prompt-management-studio
 
 ## 📦 Release History
 
-### **v0.2.0 - Core Engineering Platform** *(Latest)*
+### **v0.2.1 - Enhanced Persona Management** *(Latest)*
+- **File:** `prompt-management-studio-0.2.1.vsix` (576 KB)
+- **Changes:**
+  - **Feature:** Separated persona into distinct `role`, `tone`, and `expertise` fields in the prompt builder UI for more granular control.
+  - **Fix:** Resolved schema validation warnings that incorrectly flagged variable removals on UI changes.
+  - **Improvement:** Standardized `user_input` as the default variable for new prompts, improving consistency.
+  - **Refactor:** Updated Python and Java integration examples to align with the new persona structure.
+  - **Fix:** Excluded `examples` directory from the packaged VSIX, reducing extension size from >8MB to ~576KB.
+- **Date:** July 2024
+
+### **v0.2.0 - Core Engineering Platform**
 - **File:** `prompt-management-studio-0.2.0.vsix` (8.4 MB)
-- **Key Improvements:**
-  - ✅ **Structured prompt creation** with engineering standards
-  - ✅ **Multi-model testing and evaluation**
-  - ✅ **Native VS Code integration**
-  - ✅ **Production-grade variable validation**
-  - ✅ **Webpack bundling** for reliable packaging
-  - ✅ **Updated prompt templates** to latest schema
+- **Changes:**
+  - **Feature:** Introduced robust schema validation to detect breaking changes in prompts.
 
 ### **v0.1.1 - Template Improvements**
-- **File:** `prompt-management-studio-0.1.1.vsix` (570 KB)
 - **Key Improvements:**
-  - ✅ **Enhanced template validation**
-  - ✅ **Better error handling**
-  - ✅ **Improved user experience**
+  - ✅ **Schema-driven templates** for consistency
+  - ✅ **Enhanced validation** in the prompt builder
+  - ✅ **CI/CD pipeline** for automated builds
+- **Date:** January 2024
 
-### **v0.1.0 - Documentation & Quality Release**
-- **File:** `prompt-management-studio-0.1.0.vsix` (570 KB)
-- **Key Improvements:**
-  - ✅ **Comprehensive documentation**
-  - ✅ **Quality improvements**
-  - ✅ **Bug fixes**
-
-## 📊 Version Comparison
+## Version History Table
 
 | Version | Size | Key Features | Release Date |
-|---------|------|--------------|--------------|
+| :--- | :--- | :--- | :--- |
+| 0.2.1 | 576 KB | Enhanced persona management, UI fixes, smaller bundle | July 2024 |
 | 0.2.0 | 8.4 MB | Core engineering platform, Multi-model testing | January 2024 |
 | 0.1.1 | 570 KB | Template improvements, Better validation | January 2024 |
-| 0.1.0 | 570 KB | Initial release, Multi-model support | January 2024 |
+| 0.1.0 | 7.2 MB | Initial release with basic prompt editing | December 2023 |
 
 ---
 
 **Ready to demo!** 🚀 Start with `npm run reset-demo` to prepare your environment.
+
+For more detailed information, see the full [Release Notes](../docs/release-notes.md).

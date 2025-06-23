@@ -138,9 +138,24 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
 
               <!-- Persona Section -->
               <div class="form-group">
-                <label for="persona">Persona (Role, Tone & Expertise): *</label>
-                <textarea id="persona" placeholder="You are a helpful assistant with expertise in..." required></textarea>
-                <small>Describe the AI's role, communication tone, and areas of expertise in one paragraph</small>
+                <label for="persona-role">Persona (Role): *</label>
+                <textarea id="persona-role" placeholder="You are a senior software engineer." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <button type="button" id="add-persona-tone" class="add-optional-btn">+ Add Tone</button>
+                <div class="optional-section" id="persona-tone-section">
+                  <label for="persona-tone">Tone:</label>
+                  <textarea id="persona-tone" placeholder="e.g., Helpful and professional"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <button type="button" id="add-persona-expertise" class="add-optional-btn">+ Add Expertise</button>
+                <div class="optional-section" id="persona-expertise-section">
+                  <label for="persona-expertise">Expertise (one per line):</label>
+                  <textarea id="persona-expertise" placeholder="e.g., TypeScript"></textarea>
+                </div>
               </div>
 
               <!-- Instructions -->
@@ -157,11 +172,11 @@ export class PromptBuilderProvider implements vscode.CustomTextEditorProvider {
 
               <!-- Constraints - Optional with + icon -->
               <div class="form-group">
-                <div class="optional-section" id="constraints-section" style="display: none;">
+                <div class="optional-section" id="constraints-section">
                   <label for="constraints">Constraints & Limitations:</label>
                   <textarea id="constraints" placeholder="Any limitations or constraints the AI should follow..."></textarea>
                 </div>
-                <button type="button" id="add-constraints" class="add-optional-btn" style="display: block;">+ Add Constraints & Limitations</button>
+                <button type="button" id="add-constraints" class="add-optional-btn">+ Add Constraints & Limitations</button>
               </div>
 
               <!-- User Input Template -->

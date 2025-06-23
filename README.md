@@ -2,7 +2,7 @@
 
 ## 🏗️ **Bring Engineering Discipline to Prompt Development**
 
-The first and only VS Code extension that lets you develop, test, and manage AI prompts across ALL major providers without vendor lock-in. Transform prompt creation from chaotic copy-paste to structured, testable, version-controlled engineering practice.
+This open-source extension brings a structured, test-driven approach to prompt engineering, helping you build more reliable and maintainable AI features. This VS Code extension lets you develop, test, and manage AI prompts across ALL major providers without vendor lock-in. Transform prompt creation from chaotic copy-paste to structured, testable, version-controlled engineering practice.
 
 **Build once, run anywhere - from your code editor.**
 
@@ -24,7 +24,7 @@ We noticed a gap in the current AI tooling landscape - most solutions either:
 ### **Install & Run (2 minutes)**
 ```bash
 # Install the extension
-code --install-extension examples/prompt-management-studio-0.2.0.vsix
+code --install-extension examples/prompt-management-studio-0.2.1.vsix
 
 # Create your first prompt
 # Press Cmd+Shift+P → "Prompt Studio: Create New Prompt"
@@ -80,19 +80,13 @@ Apply software engineering best practices to prompt development:
       "Finally, suggest performance improvements"
     ]
   },
-  "user_input_template": "Review this {{language}} code:\n\n{{code}}",
+  "user_input_template": "Review this code:\n\n{{user_input}}",
   "variables": [
     {
-      "name": "code",
+      "name": "user_input",
       "type": "string",
       "required": true,
       "description": "Source code to review"
-    },
-    {
-      "name": "language", 
-      "type": "string",
-      "required": true,
-      "description": "Programming language (e.g., Python, JavaScript)"
     }
   ],
   "test_cases": [

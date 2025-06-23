@@ -42,13 +42,12 @@ public class PromptController {
     public ResponseEntity<Map<String, Object>> reviewCode(@Valid @RequestBody CodeReviewRequest request) {
         try {
             Map<String, Object> variables = new HashMap<>();
-            variables.put("code", request.getCode());
-            variables.put("language", request.getLanguage());
+            variables.put("user_input", request.getUserInput());
             
-            String result = promptManager.executePrompt("code-review-assistant", variables, request.getProvider());
+            String result = promptManager.executePrompt("code-review", variables, request.getProvider());
             
             Map<String, Object> response = new HashMap<>();
-            response.put("prompt_used", "code-review-assistant");
+            response.put("prompt_used", "code-review");
             response.put("provider", request.getProvider());
             response.put("review", result);
             response.put("variables", variables);

@@ -49,4 +49,7 @@ SECURITY.md
 *.swo
 
 # Package files
-package-lock.json 
+package-lock.json
+
+# Examples and demos
+examples/** 

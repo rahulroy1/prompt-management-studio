@@ -145,7 +145,7 @@ export class PromptCreator {
       user_input_template: '{{user_input}}',
       variables: [
         {
-                      name: 'user_input',
+          name: 'user_input',
           type: 'string',
           description: 'The user\'s query or request',
           required: true
@@ -155,7 +155,7 @@ export class PromptCreator {
         {
           name: 'Basic Test',
           inputs: {
-            user_query: 'Hello, how are you?'
+            user_input: 'Hello, how are you?'
           }
         }
       ],
@@ -214,22 +214,8 @@ export class PromptCreator {
           'Suggest improvements where applicable',
           'Provide constructive feedback'
         ];
-        basePrompt.user_input_template = 'Please review this code:\n\n```{{language}}\n{{code}}\n```';
-        basePrompt.variables = [
-          {
-            name: 'language',
-            type: 'string',
-            description: 'Programming language',
-            required: true,
-            default: 'javascript'
-          },
-          {
-            name: 'code',
-            type: 'string',
-            description: 'Code to review',
-            required: true
-          }
-        ];
+        basePrompt.user_input_template = 'Please review this code:\n\n```\n{{user_input}}\n```';
+        basePrompt.variables = [{ name: 'user_input', type: 'string', required: true }];
         break;
 
       case 'content-generation':

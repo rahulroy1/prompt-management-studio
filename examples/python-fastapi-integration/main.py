@@ -23,8 +23,7 @@ anthropic_client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 class CodeReviewRequest(BaseModel):
-    code: str
-    language: str
+    user_input: str
     provider: str = "openai"  # openai, anthropic, google
 
 class CustomerFeedbackRequest(BaseModel):
@@ -182,22 +181,22 @@ async def review_code(request: CodeReviewRequest):
     """Review code using the code review prompt template"""
     try:
         result = await prompt_manager.execute_prompt(
-            "code-review-assistant",
+            "code-review",
             {
-                "code": request.code,
-                "language": request.language
+                "user_input": request.user_input
             },
             request.provider
         )
         return {
-            "prompt_used": "code-review-assistant",
+            "prompt_used": "code-review",
             "provider": request.provider,
             "review": result,
             "variables": {
-                "code": request.code[:100] + "..." if len(request.code) > 100 else request.code,
-                "language": request.language
+                "user_input": request.user_input[:200] + "..." if len(request.user_input) > 200 else request.user_input
             }
         }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

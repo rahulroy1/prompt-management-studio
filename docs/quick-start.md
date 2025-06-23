@@ -28,17 +28,20 @@
 
 ## 🎯 **Step 1: Installation**
 
-### **Install the Extension**
+### **From VSIX File**
+
+1.  Navigate to the `examples` directory in the project root.
+2.  Install the packaged VSIX file using the VS Code command line:
+
 ```bash
-# Install the latest version (0.2.0)
-code --install-extension examples/prompt-management-studio-0.2.0.vsix
+# Install the latest version (0.2.1)
+code --install-extension examples/prompt-management-studio-0.2.1.vsix
 ```
 
-**What's New in v0.2.0:**
-- 🔒 **Prompt Schema Validation** - Automatic breaking change detection
-- 📊 Compatibility scoring and migration guidance  
-- 🚨 Pre-save validation to prevent production breaks
-- 📝 Detailed schema change reports
+**What's New in v0.2.1:**
+- **Enhanced Persona UI:** The prompt builder now has separate fields for `role`, `tone`, and `expertise` for more granular control.
+- **Reduced Extension Size:** The `.vsix` package is now ~576KB instead of >8MB.
+- **Standardized Templates:** New prompts consistently use `{{user_input}}` as the default variable.
 
 ---
 
@@ -53,6 +56,13 @@ code --install-extension examples/prompt-management-studio-0.2.0.vsix
 4. **Keys are stored securely** in VS Code's SecretStorage
 
 > 💡 **Tip:** API keys are encrypted and stored locally - they never leave your machine
+
+### **Packaged Extension**
+
+Inside the `examples` directory, you will find:
+
+- **`prompt-management-studio-0.2.1.vsix`** - Latest packaged extension
+- **`Prompt Studio-demo.mp4`** - Video demonstration
 
 ---
 
@@ -249,7 +259,7 @@ npm run compile
 
 The `examples/` folder contains:
 - **`code-review.prompt.json`** - Complete code review assistant example
-- **`prompt-management-studio-0.2.0.vsix`** - Latest packaged extension
+- **`prompt-management-studio-0.2.1.vsix`** - Latest packaged extension
 - **`prompt-management-studio-0.1.1.vsix`** - Previous stable version
 - **Demo scripts** - Automated setup and reset tools
 

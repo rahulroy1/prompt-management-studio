@@ -19,7 +19,13 @@
         category: document.getElementById('category'),
         
         // Core prompt fields
-        persona: document.getElementById('persona'),
+        personaRole: document.getElementById('persona-role'),
+        personaTone: document.getElementById('persona-tone'),
+        personaExpertise: document.getElementById('persona-expertise'),
+        addPersonaToneBtn: document.getElementById('add-persona-tone'),
+        addPersonaExpertiseBtn: document.getElementById('add-persona-expertise'),
+        personaToneSection: document.getElementById('persona-tone-section'),
+        personaExpertiseSection: document.getElementById('persona-expertise-section'),
         instructions: document.getElementById('instructions'),
         chainOfThought: document.getElementById('chain-of-thought'),
         constraints: document.getElementById('constraints'),
@@ -56,6 +62,31 @@
         shareTeamBtn: document.getElementById('share-team')
     };
     
+    // Set initial UI state
+    function initializeUIState() {
+        const optionalSections = [
+            'personaToneSection', 
+            'personaExpertiseSection', 
+            'constraintsSection'
+        ];
+        optionalSections.forEach(id => {
+            if (elements[id]) {
+                elements[id].style.display = 'none';
+            }
+        });
+
+        const addButtons = [
+            'addPersonaToneBtn',
+            'addPersonaExpertiseBtn',
+            'addConstraintsBtn'
+        ];
+        addButtons.forEach(id => {
+            if (elements[id]) {
+                elements[id].style.display = 'block';
+            }
+        });
+    }
+    
     // Initialize event listeners
     function initializeEventListeners() {
         // Form change listeners for all inputs
@@ -68,6 +99,8 @@
         
         // Button listeners
         elements.addConstraintsBtn?.addEventListener('click', showConstraintsSection);
+        elements.addPersonaToneBtn?.addEventListener('click', showPersonaToneSection);
+        elements.addPersonaExpertiseBtn?.addEventListener('click', showPersonaExpertiseSection);
         elements.addExampleBtn?.addEventListener('click', addExample);
         elements.addModelBtn?.addEventListener('click', () => addModelRow());
         
@@ -85,6 +118,22 @@
             elements.constraintsSection.style.display = 'block';
             elements.addConstraintsBtn.style.display = 'none';
             elements.constraints.focus();
+        }
+    }
+
+    function showPersonaToneSection() {
+        if (elements.personaToneSection && elements.addPersonaToneBtn) {
+            elements.personaToneSection.style.display = 'block';
+            elements.addPersonaToneBtn.style.display = 'none';
+            elements.personaTone.focus();
+        }
+    }
+
+    function showPersonaExpertiseSection() {
+        if (elements.personaExpertiseSection && elements.addPersonaExpertiseBtn) {
+            elements.personaExpertiseSection.style.display = 'block';
+            elements.addPersonaExpertiseBtn.style.display = 'none';
+            elements.personaExpertise.focus();
         }
     }
     
@@ -117,16 +166,17 @@
         if (elements.userInputTemplate) elements.userInputTemplate.value = prompt.user_input_template || '';
         
         // Core prompt fields
-        if (elements.persona) {
-            // Combine persona fields into one text area
-            let personaText = prompt.prompt?.persona?.role || '';
-            if (prompt.prompt?.persona?.tone) {
-                personaText += `\n\nTone: ${prompt.prompt.persona.tone}`;
-            }
-            if (prompt.prompt?.persona?.expertise && prompt.prompt.persona.expertise.length > 0) {
-                personaText += `\n\nExpertise: ${prompt.prompt.persona.expertise.join(', ')}`;
-            }
-            elements.persona.value = personaText;
+        const persona = prompt.prompt?.persona;
+        if (elements.personaRole) {
+            elements.personaRole.value = persona?.role || '';
+        }
+        if (persona?.tone && elements.personaTone) {
+            showPersonaToneSection();
+            elements.personaTone.value = persona.tone;
+        } 
+        if (persona?.expertise && persona.expertise.length > 0 && elements.personaExpertise) {
+            showPersonaExpertiseSection();
+            elements.personaExpertise.value = persona.expertise.join('\n');
         }
         
         if (elements.instructions) {
@@ -142,11 +192,7 @@
             elements.constraints.value = constraints;
             
             if (constraints.trim()) {
-                // Show constraints section if there are constraints
-                if (elements.constraintsSection && elements.addConstraintsBtn) {
-                    elements.constraintsSection.style.display = 'block';
-                    elements.addConstraintsBtn.style.display = 'none';
-                }
+                showConstraintsSection();
             }
         }
         
@@ -272,106 +318,107 @@
     
     // Collect form data - Simplified and more robust
     function collectFormData() {
-        // Start with a clone of the current prompt or a default structure
-        const prompt = currentPrompt ? JSON.parse(JSON.stringify(currentPrompt)) : {
-            title: '',
-            description: '',
-            models: [],
-            prompt: {},
-            user_input_template: '',
-            test_cases: [],
-            metadata: {}
+        const promptData = {
+            title: elements.title.value,
+            description: elements.description.value,
+            models: collectModels(),
+            prompt: {
+                persona: {},
+                instructions: elements.instructions.value.split('\n').filter(line => line.trim() !== ''),
+                chain_of_thought: elements.chainOfThought.value.split('\n').filter(line => line.trim() !== ''),
+                constraints: elements.constraints.value.split('\n').filter(line => line.trim() !== ''),
+                few_shot_examples: collectExamples(),
+                output_format: {
+                    format: elements.outputFormatType.value,
+                    template: elements.outputFormatTemplate.value
+                }
+            },
+            user_input_template: elements.userInputTemplate.value,
+            variables: [], // This will be populated on the extension side
+            test_cases: [], // This will be populated on the extension side
+            metadata: {
+                author: elements.metadataAuthor.value,
+                version: elements.metadataVersion.value,
+                category: elements.category.value,
+                difficulty: elements.metadataDifficulty.value,
+                tags: elements.metadataTags.value.split(',').map(tag => tag.trim()).filter(tag => tag)
+            }
         };
 
-        // Basic fields
-        if (elements.title) prompt.title = elements.title.value || '';
-        if (elements.description) prompt.description = elements.description.value || '';
-        if (elements.userInputTemplate) prompt.user_input_template = elements.userInputTemplate.value || '';
+        // Persona
+        const persona = {};
+        if (elements.personaRole.value) {
+            persona.role = elements.personaRole.value;
+        }
+        if (elements.personaTone.value) {
+            persona.tone = elements.personaTone.value;
+        }
+        if (elements.personaExpertise.value) {
+            persona.expertise = elements.personaExpertise.value.split('\n').map(e => e.trim()).filter(e => e);
+        }
+        promptData.prompt.persona = persona;
         
-        // Initialize prompt structure if it doesn't exist
-        if (!prompt.prompt) prompt.prompt = {};
-        
-        // Parse persona field
-        if (elements.persona) {
-            const personaText = elements.persona.value || '';
-            const personaLines = personaText.split('\\n').filter(line => line.trim());
-            
-            prompt.prompt.persona = {
-                role: personaLines[0] || 'You are a helpful assistant'
-            };
-            
-            personaLines.forEach(line => {
-                if (line.toLowerCase().startsWith('tone:')) {
-                    prompt.prompt.persona.tone = line.substring(5).trim();
-                } else if (line.toLowerCase().startsWith('expertise:')) {
-                    const expertiseText = line.substring(10).trim();
-                    prompt.prompt.persona.expertise = expertiseText.split(',').map(e => e.trim()).filter(e => e);
-                }
-            });
+        // Clean up empty optional fields
+        if (promptData.prompt.chain_of_thought.length === 0) {
+            delete promptData.prompt.chain_of_thought;
+        }
+        if (promptData.prompt.constraints.length === 0) {
+            delete promptData.prompt.constraints;
         }
 
-        // Instructions, chain of thought, constraints
-        if (elements.instructions) prompt.prompt.instructions = elements.instructions.value.split('\\n').filter(line => line.trim() !== '');
-        if (elements.chainOfThought) prompt.prompt.chain_of_thought = elements.chainOfThought.value.split('\\n').filter(line => line.trim() !== '');
-        if (elements.constraints) prompt.prompt.constraints = elements.constraints.value.split('\\n').filter(line => line.trim() !== '');
-        
-        // Clean up empty arrays
-        if (prompt.prompt.chain_of_thought?.length === 0) delete prompt.prompt.chain_of_thought;
-        if (prompt.prompt.constraints?.length === 0) delete prompt.prompt.constraints;
-
         // Examples
-        prompt.prompt.few_shot_examples = collectExamples();
-        if (prompt.prompt.few_shot_examples?.length === 0) delete prompt.prompt.few_shot_examples;
+        promptData.prompt.few_shot_examples = collectExamples();
+        if (promptData.prompt.few_shot_examples?.length === 0) delete promptData.prompt.few_shot_examples;
         
         // Output format
         const formatType = elements.outputFormatType?.value;
         const template = elements.outputFormatTemplate?.value;
         
         if (formatType || template) {
-            prompt.prompt.output_format = {};
-            if (formatType) prompt.prompt.output_format.format = formatType;
+            promptData.prompt.output_format = {};
+            if (formatType) promptData.prompt.output_format.format = formatType;
             if (template) {
                 if (formatType === 'json') {
                     try {
-                        prompt.prompt.output_format.schema = JSON.parse(template);
+                        promptData.prompt.output_format.schema = JSON.parse(template);
                     } catch (e) {
-                        prompt.prompt.output_format.description = template; // Keep as description if JSON is invalid
+                        promptData.prompt.output_format.description = template; // Keep as description if JSON is invalid
                     }
                 } else {
-                    prompt.prompt.output_format.description = template;
+                    promptData.prompt.output_format.description = template;
                 }
             }
         } else {
-            delete prompt.prompt.output_format;
+            delete promptData.prompt.output_format;
         }
 
         // Models
-        prompt.models = collectModels();
+        promptData.models = collectModels();
         
         // Metadata
-        if (!prompt.metadata) prompt.metadata = {};
-        if (elements.category) prompt.metadata.category = elements.category.value || '';
-        if (elements.metadataAuthor) prompt.metadata.author = elements.metadataAuthor.value || '';
-        if (elements.metadataVersion) prompt.metadata.version = elements.metadataVersion.value || '';
-        if (elements.metadataDifficulty) prompt.metadata.difficulty = elements.metadataDifficulty.value || '';
+        if (!promptData.metadata) promptData.metadata = {};
+        if (elements.category) promptData.metadata.category = elements.category.value || '';
+        if (elements.metadataAuthor) promptData.metadata.author = elements.metadataAuthor.value || '';
+        if (elements.metadataVersion) promptData.metadata.version = elements.metadataVersion.value || '';
+        if (elements.metadataDifficulty) promptData.metadata.difficulty = elements.metadataDifficulty.value || '';
         
         // Parse tags
         if (elements.metadataTags) {
             const tagsText = elements.metadataTags.value || '';
             if (tagsText.trim()) {
-                prompt.metadata.tags = tagsText.split(',').map(tag => tag.trim()).filter(tag => tag);
+                promptData.metadata.tags = tagsText.split(',').map(tag => tag.trim()).filter(tag => tag);
             } else {
-                delete prompt.metadata.tags;
+                delete promptData.metadata.tags;
             }
         }
         
         // Timestamps
-        prompt.metadata.updated = new Date().toISOString();
-        if (!prompt.metadata.created) {
-            prompt.metadata.created = new Date().toISOString();
+        promptData.metadata.updated = new Date().toISOString();
+        if (!promptData.metadata.created) {
+            promptData.metadata.created = new Date().toISOString();
         }
         
-        return prompt;
+        return promptData;
     }
 
     function collectExamples() {
@@ -627,16 +674,13 @@
     
     // Clear the test input and results
     function clearTestArea() {
-        if (elements.testInput) {
-            elements.testInput.value = '';
-        }
-        if (elements.testResults) {
-            elements.testResults.innerHTML = '';
-        }
+        if (elements.testResults) elements.testResults.innerHTML = '';
+        if (elements.testInput) elements.testInput.value = '';
     }
     
     // Initialize the app
     function initialize() {
+        initializeUIState();
         initializeEventListeners();
         
         // Load default prompt if none provided

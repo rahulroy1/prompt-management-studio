@@ -216,6 +216,22 @@ The extension is now ready for professional use in production environments.
 - **Quality Improvements**: Updated package structure and improved maintainability
 - **Consolidated Guides**: Created comprehensive quick-start, user guide, and developer documentation
 
+### Version 0.2.1 - Enhanced Persona Management
+- **Release Date:** July 2024
+- **VSIX Package:** `prompt-management-studio-0.2.1.vsix` (576 KB)
+
+#### ✨ New Features & Improvements
+- **Granular Persona Control:** The prompt builder UI now features distinct, optional fields for `role`, `tone`, and `expertise`, allowing for more precise definition of the AI's persona.
+- **Standardized Templates:** The "Create New Prompt" command now generates prompts that consistently use `{{user_input}}` as the primary variable, simplifying new prompt creation and integration.
+- **Reduced Extension Size:** The packaged VSIX file size has been dramatically reduced from over 8MB to approximately 576KB by excluding the `examples` directory from the build. This results in a much faster installation.
+
+#### 🐛 Bug Fixes
+- **Corrected Schema Validation:** Resolved an issue where the schema validator would incorrectly flag breaking changes (variable removals) during normal UI edits. The validator now correctly handles changes to the `user_input_template`.
+- **Fixed UI State:** Addressed a visual bug where optional text areas for `tone` and `expertise` were visible by default. These sections are now correctly hidden until the user chooses to add them.
+
+#### 🔧 Code & Integration
+- **Updated Integration Examples:** The Python (FastAPI) and Java (Spring Boot) examples have been refactored to align with the standardized `user_input` variable, ensuring they work correctly out-of-the-box.
+
 ### Version 0.2.0 - Production Safety Through Schema Validation
 
 ### 🔒 **NEW: Prompt Schema Validation**

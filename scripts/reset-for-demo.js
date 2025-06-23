@@ -48,9 +48,18 @@ console.log('   • Find "Prompt Management Studio"');
 console.log('   • Click gear icon → Uninstall\n');
 
 console.log('4. Install Fresh Extension for Demo:');
-console.log(`   • Run: code --install-extension examples/${vsixFiles[0] || 'prompt-management-studio-0.2.0.vsix'}`);
-console.log('   • Or use VS Code UI: Extensions → Install from VSIX');
-console.log('   • IMPORTANT: Reload VS Code window after installation\n');
+if (vsixFiles.length === 1) {
+  console.log('   --------------------------------------------------------');
+  console.log('   ✅ VSIX package found. To install, run this command:');
+  console.log(`   code --install-extension examples/${vsixFiles[0]}`);
+  console.log('   --------------------------------------------------------');
+} else {
+  console.log('   --------------------------------------------------------');
+  console.log('   🟡 Could not find unique VSIX package.');
+  console.log('   To install the extension, please run:');
+  console.log(`   • Run: code --install-extension examples/prompt-management-studio-0.2.1.vsix`);
+  console.log('   --------------------------------------------------------');
+}
 
 console.log('5. Verify Clean State:');
 console.log('   • Press Cmd+Shift+P');

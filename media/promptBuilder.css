@@ -123,12 +123,23 @@ small {
 
 /* Optional Section Styling */
 .optional-section {
-  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.optional-group {
+  position: relative;
+  padding-top: 25px; /* Space for the button */
+}
+
+.optional-group .add-optional-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .add-optional-btn {
-  background: var(--vscode-button-secondaryBackground);
-  color: var(--vscode-button-secondaryForeground);
+  background-color: transparent;
+  color: var(--vscode-button-secondary-foreground);
   border: 1px dashed var(--vscode-button-secondaryBackground);
   padding: 8px 12px;
   border-radius: 4px;
